@@ -13,6 +13,7 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
     "firebase": "^7.19.0",
+    "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
@@ -24,11 +25,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint:js": "./node_modules/.bin/eslint \"./src/**/*.{js,jsx,ts,tsx}\"",
-    "lint:js:fix": "./node_modules/.bin/eslint './src/**/*.{js,jsx,ts,tsx}' --fix",
-    "lint:css": "./node_modules/.bin/stylelint './src/**/*.{css,scss}'",
-    "lint:css:fix": "./node_modules/.bin/stylelint './src/**/*.{css,scss}' --fix",
-    "format": "prettier --write \"**/*.+(js|jsx|json|css|md)\""
+    "lint:scripts": "./node_modules/.bin/eslint \"./src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:scripts:fix": "./node_modules/.bin/eslint \"./src/**/*.{js,jsx,ts,tsx}\" --fix",
+    "lint:styles": "./node_modules/.bin/stylelint \"./src/**/*.{css,scss}\"",
+    "lint:styles:fix": "./node_modules/.bin/stylelint \"./src/**/*.{css,scss}\" --fix",
+    "format": "./node_modules/.bin/prettier --write \"**/*.{js,jsx,json,css,md}\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -54,14 +55,9 @@
     "eslint-plugin-react": "^7.20.6",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.13",
-    "prettier": "^2.1.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,jsx}": "lint:fix --cache"
+    "prettier": "^2.1.1",
+    "stylelint": "^13.6.1",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-scss": "^3.18.0"
   }
 }
