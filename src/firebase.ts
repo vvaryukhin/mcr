@@ -1,15 +1,22 @@
-import firebase from 'firebase/app';
+import * as firebase from 'firebase/app';
 import 'firebase/database';
 
 const config = {
-  apiKey: process.env.REACT_APP_APIKEY,
-  authDomain: process.env.REACT_APP_AUTHDOMAIN,
-  databaseURL: process.env.REACT_APP_DB,
-  projectId: process.env.REACT_APP_PID,
-  storageBucket: process.env.REACT_APP_SB,
-  messagingSenderId: process.env.REACT_APP_SID,
-  appId: process.env.REACT_APP_APPID,
-  measurementId: process.env.REACT_APP_MID,
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
 };
 
 firebase.initializeApp(config);
+
+export const auth = firebase.auth;
+export const db = firebase.database();
+
+const databaseRef = firebase.database().ref();
+export const callsRef = databaseRef.child('calls');
+
+export default firebase;
