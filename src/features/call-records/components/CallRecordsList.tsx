@@ -1,6 +1,5 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { ICallRecord } from './interfaces';
+import React from 'react';
+import { ICallRecord } from '../types';
 
 interface CallRecordsListProps {
   records?: ICallRecord[];
@@ -12,7 +11,7 @@ const CallRecordsList: React.FC<CallRecordsListProps> = ({ records = [] }) => {
       {records.map(call => {
         return (
           <li key="{call.id}">
-            <div>Имя собеседника – {call.collocutor.firstname}</div>
+            <div>Имя собеседника – {call.collocutor.firstName}</div>
             <div>Телефон собеседника – {call.collocutor.phone}</div>
             <div>Длительность разговора – {call.record.duration}</div>
             <div>
@@ -23,10 +22,6 @@ const CallRecordsList: React.FC<CallRecordsListProps> = ({ records = [] }) => {
       })}
     </ul>
   );
-};
-
-CallRecordsList.propTypes = {
-  records: PropTypes.array,
 };
 
 export default CallRecordsList;
