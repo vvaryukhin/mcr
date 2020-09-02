@@ -1,5 +1,5 @@
 import React from 'react';
-import CallRecords from '../features/call-records/CallRecords';
+import CallRecords from 'features/call-records/components/CallRecords';
 
 function Main() {
   return (

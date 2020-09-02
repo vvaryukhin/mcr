@@ -1,16 +1,16 @@
 export interface ICallRecord {
   id: number;
-  direction: TCallDirection;
+  direction: IDirection;
   collocutor: ICollocutor;
   record: IRecord;
-  created_at: number;
-  deleted_at: number | null;
+  createdAt: number;
+  deletedAt: number | null;
 }
 
 export interface ICollocutor {
-  firstname: string;
-  lastname: string;
-  middlename: string;
+  firstName: string;
+  lastName: string;
+  middleName: string;
   phone: string;
 }
 
@@ -23,7 +23,7 @@ export interface IRecord {
 
 export interface ITranscription {
   text: string;
-  created_at: number;
+  createdAt: number;
 }
 
-export type TCallDirection = 'incoming' | 'outcoming';
+export type IDirection = 'incoming' | 'outcoming';
