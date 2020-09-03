@@ -1,3 +1,5 @@
-export enum CallRecordEvents {
+export enum CallRecordsEvents {
   SET_RECORDS = 'SET_RECORDS',
+  SET_SEARCH_QUERY = 'SET_SEARCH_QUERY',
+  SET_SORTING = 'SET_SORTING',
 }

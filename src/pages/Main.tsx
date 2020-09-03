@@ -1,11 +1,15 @@
 import React from 'react';
-import CallRecords from 'features/call-records/components/CallRecords';
+import CallRecordsList from 'features/call-records/components/List';
+import CallRecordsSearch from 'features/call-records/components/Search';
+import CallRecordsSorting from 'features/call-records/components/Sorting';
 
 function Main() {
   return (
     <div>
       <h2>Ваши звонки</h2>
-      <CallRecords />
+      <CallRecordsSorting />
+      <CallRecordsSearch />
+      <CallRecordsList />
     </div>
   );
 }
