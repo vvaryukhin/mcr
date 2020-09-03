@@ -36,10 +36,19 @@ export async function findByNumber({ phoneNumber }: { phoneNumber: string }) {
   });
 }
 
+// from what I remember you can not use delete
+// in function names on ie
+// TODO check wether it's possible
+export async function remove(id: number) {
+  console.log('deleted records with %s id', id);
+  await sleep(500);
+}
+
 export default {
   find,
   fetch,
   findByNumber,
+  remove,
 };
 
 function getRecords(): ICallRecord[] {

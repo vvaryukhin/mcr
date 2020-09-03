@@ -6,6 +6,10 @@ export const setRecords = makeAction<CallRecordsEvents.SET_RECORDS, ICallRecord[
   CallRecordsEvents.SET_RECORDS
 );
 
+export const deleteRecord = makeAction<CallRecordsEvents.DELETE_RECORD, number>(
+  CallRecordsEvents.DELETE_RECORD
+);
+
 export const setSearchQuery = makeAction<CallRecordsEvents.SET_SEARCH_QUERY, string>(
   CallRecordsEvents.SET_SEARCH_QUERY
 );
@@ -22,6 +26,7 @@ export const setDateInterval = makeAction<
 
 const actions = {
   setRecords,
+  deleteRecord,
   setSearchQuery,
   setSorting,
   setDateInterval,

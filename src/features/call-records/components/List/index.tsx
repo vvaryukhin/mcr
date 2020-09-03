@@ -1,10 +1,19 @@
 import React, { useEffect } from 'react';
 import CallRecordsList from './component';
-import CallRecordsService from '../../services';
-import { setRecords } from '../../store/actions';
-import { ICallRecord, CallRecordsSortingTypes, IDateInterval } from '../../types';
+import CallRecordsService from 'features/call-records/services';
+import {
+  setRecords,
+  deleteRecord,
+  ICallRecordAction,
+} from 'features/call-records/store/actions';
+import {
+  ICallRecord,
+  CallRecordsSortingTypes,
+  IDateInterval,
+} from 'features/call-records/types';
 import { connect } from 'react-redux';
 import { IAppState } from 'store';
+import { Dispatch } from 'redux';
 
 interface IProps {
   dateInterval: IDateInterval;
@@ -12,6 +21,7 @@ interface IProps {
   searchQuery: string;
   records: ICallRecord[];
   setRecords: (records: ICallRecord[]) => void;
+  deleteRecord: (id: number) => void;
 }
 
 function CallRecords({
@@ -20,6 +30,7 @@ function CallRecords({
   searchQuery,
   records,
   setRecords,
+  deleteRecord,
 }: IProps) {
   useEffect(() => {
     console.log('effect...');
@@ -32,7 +43,7 @@ function CallRecords({
     });
   }, [dateInterval, sorting, searchQuery, setRecords]);
 
-  return <CallRecordsList records={records} />;
+  return <CallRecordsList records={records} deleteRecord={deleteRecord} />;
 }
 
 const mapStateToProps = (state: IAppState) => {
@@ -44,8 +55,15 @@ const mapStateToProps = (state: IAppState) => {
   };
 };
 
-const mapDispatchToProps = {
-  setRecords,
+const mapDispatchToProps = (dispatch: Dispatch<ICallRecordAction>) => {
+  return {
+    setRecords: (records: ICallRecord[]) => {
+      dispatch(setRecords(records));
+    },
+    deleteRecord: (id: number) => {
+      CallRecordsService.remove(id).then(() => dispatch(deleteRecord(id)));
+    },
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CallRecords);

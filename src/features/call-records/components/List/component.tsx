@@ -3,9 +3,13 @@ import { ICallRecord } from '../../types';
 
 interface ICallRecordsListProps {
   records?: ICallRecord[];
+  deleteRecord: (id: number) => void;
 }
 
-const CallRecordsList: React.FC<ICallRecordsListProps> = ({ records = [] }) => {
+const CallRecordsList: React.FC<ICallRecordsListProps> = ({
+  records = [],
+  deleteRecord,
+}) => {
   return (
     <ul>
       {records.map(call => {
@@ -29,7 +33,10 @@ const CallRecordsList: React.FC<ICallRecordsListProps> = ({ records = [] }) => {
               Длительность разговора – {call.record.duration}
             </div>
             <div style={{ padding: 5 }}>
-              <a href={'/records/' + call.record.id}>Подробнее</a>
+              <a href={'/records/' + call.id}>Подробнее</a>
+            </div>
+            <div onClick={() => deleteRecord(call.id)}>
+              <button>Delete</button>
             </div>
           </li>
         );

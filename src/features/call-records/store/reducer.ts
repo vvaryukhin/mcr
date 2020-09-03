@@ -27,6 +27,11 @@ export function reducer(
   switch (action.type) {
     case CallRecordsEvents.SET_RECORDS:
       return { ...state, records: action.payload };
+    case CallRecordsEvents.DELETE_RECORD:
+      return {
+        ...state,
+        records: state.records.filter(({ id }) => id !== action.payload),
+      };
     case CallRecordsEvents.SET_SEARCH_QUERY:
       return { ...state, searchQuery: action.payload };
     case CallRecordsEvents.SET_SORTING:
