@@ -1,4 +1,8 @@
-import { ICallRecord, CallRecordsSortingTypes } from 'features/call-records/types';
+import {
+  ICallRecord,
+  IDateInterval,
+  CallRecordsSortingTypes,
+} from 'features/call-records/types';
 import { ICallRecordAction } from './actions';
 import { CallRecordsEvents } from './events';
 
@@ -6,12 +10,14 @@ interface ICallRecordsState {
   records: ICallRecord[];
   searchQuery: string;
   sorting: CallRecordsSortingTypes;
+  dateInterval: IDateInterval;
 }
 
 const initialState: ICallRecordsState = {
   records: [],
   searchQuery: '',
   sorting: CallRecordsSortingTypes.DATE_ACS,
+  dateInterval: {},
 };
 
 export function reducer(
@@ -25,6 +31,8 @@ export function reducer(
       return { ...state, searchQuery: action.payload };
     case CallRecordsEvents.SET_SORTING:
       return { ...state, sorting: action.payload };
+    case CallRecordsEvents.SET_DATE_INTERVAL:
+      return { ...state, dateInterval: action.payload };
     default:
       return state;
   }

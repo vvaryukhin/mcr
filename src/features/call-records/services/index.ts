@@ -1,14 +1,19 @@
-import { ICallRecord, CallRecordsSortingTypes } from '../types';
+import { ICallRecord, CallRecordsSortingTypes, IDateInterval } from '../types';
 
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 interface IFindRecordOptions {
+  dateInterval?: IDateInterval;
   phoneNumber?: string;
   sorting?: CallRecordsSortingTypes;
 }
 
-export function find({ sorting, phoneNumber }: IFindRecordOptions = {}) {
-  console.log(sorting);
+export function find({
+  dateInterval,
+  sorting,
+  phoneNumber,
+}: IFindRecordOptions = {}) {
+  console.log(sorting, dateInterval);
   if (!phoneNumber) {
     return fetch();
   }
@@ -27,7 +32,6 @@ export async function findByNumber({ phoneNumber }: { phoneNumber: string }) {
       collocutor: { phone },
     } = record;
     const queryPhoneDigits = phoneNumber.replace(/\D/g, '');
-    console.log(phone.replace(/\D/g, ''), queryPhoneDigits);
     return phone.replace(/\D/g, '').includes(queryPhoneDigits);
   });
 }

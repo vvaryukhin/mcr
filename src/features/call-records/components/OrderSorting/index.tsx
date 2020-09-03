@@ -1,4 +1,4 @@
-import RecordsSorting from './component';
+import OrderSorting from './component';
 import { connect } from 'react-redux';
 import { IAppState } from 'store';
 import { setSorting } from 'features/call-records/store/actions';
@@ -13,4 +13,4 @@ const mapDispatchToProps = {
   setSorting,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RecordsSorting);
+export default connect(mapStateToProps, mapDispatchToProps)(OrderSorting);

@@ -1,6 +1,6 @@
 import { makeAction, IActionUnion } from 'store/utils';
 import { CallRecordsEvents } from './events';
-import { ICallRecord, CallRecordsSortingTypes } from '../types';
+import { ICallRecord, CallRecordsSortingTypes, IDateInterval } from '../types';
 
 export const setRecords = makeAction<CallRecordsEvents.SET_RECORDS, ICallRecord[]>(
   CallRecordsEvents.SET_RECORDS
@@ -15,10 +15,16 @@ export const setSorting = makeAction<
   CallRecordsSortingTypes
 >(CallRecordsEvents.SET_SORTING);
 
+export const setDateInterval = makeAction<
+  CallRecordsEvents.SET_DATE_INTERVAL,
+  IDateInterval
+>(CallRecordsEvents.SET_DATE_INTERVAL);
+
 const actions = {
   setRecords,
   setSearchQuery,
   setSorting,
+  setDateInterval,
 };
 
 export type ICallRecordAction = IActionUnion<typeof actions>;

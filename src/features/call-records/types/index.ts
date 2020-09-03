@@ -35,3 +35,8 @@ export enum CallRecordsSortingTypes {
   DURATION_DES,
   NAME_ALPHABET_ACS,
 }
+
+export interface IDateInterval {
+  from?: number;
+  to?: number;
+}
