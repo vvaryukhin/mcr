@@ -7,7 +7,7 @@ const useLazyEffect: typeof useEffect = (cb, deps) => {
     if (!isMounted.current) {
       isMounted.current = true;
     } else {
-      cb(...args);
+      return cb(...args);
     }
   }, deps); // eslint-disable-line react-hooks/exhaustive-deps
 };
