@@ -1,20 +1,23 @@
 import React from 'react';
-import { ICallRecord } from '../../types';
+import { ICallRecord } from 'features/call-records/types';
 
 interface ICallRecordsListProps {
   records?: ICallRecord[];
   deleteRecord: (id: number) => void;
+  setPlayingRecord: (recordId: number) => void;
 }
 
 const CallRecordsList: React.FC<ICallRecordsListProps> = ({
   records = [],
   deleteRecord,
+  setPlayingRecord,
 }) => {
   return (
     <ul>
       {records.map(call => {
         return (
           <li
+            onClick={() => setPlayingRecord(call.id)}
             key={call.id}
             style={{
               background: '#eee',
@@ -35,7 +38,13 @@ const CallRecordsList: React.FC<ICallRecordsListProps> = ({
             <div style={{ padding: 5 }}>
               <a href={'/records/' + call.id}>Подробнее</a>
             </div>
-            <div onClick={() => deleteRecord(call.id)}>
+
+            <div
+              onClick={e => {
+                e.stopPropagation();
+                deleteRecord(call.id);
+              }}
+            >
               <button>Delete</button>
             </div>
           </li>

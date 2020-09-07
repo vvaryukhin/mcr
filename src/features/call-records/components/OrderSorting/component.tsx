@@ -1,6 +1,5 @@
 import React from 'react';
 import { CallRecordsSortingTypes } from 'features/call-records/types';
-import { toInt } from 'utils';
 import Select from 'components/Select';
 
 interface IRecordSortingProps {
@@ -30,8 +29,7 @@ const orderSelectOptions = [
 
 const OrderSorting = ({ selectedSorting, setSorting }: IRecordSortingProps) => {
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const sorting = toInt(e.target.value);
-    setSorting(sorting);
+    setSorting(e.target.value as CallRecordsSortingTypes);
   };
 
   return (

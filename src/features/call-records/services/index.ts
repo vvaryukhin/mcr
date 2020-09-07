@@ -1,23 +1,30 @@
-import { ICallRecord, CallRecordsSortingTypes, IDateInterval } from '../types';
+import {
+  ICallRecord,
+  IDateInterval,
+  CallDirectionTypes,
+  CallRecordsSortingTypes,
+} from '../types';
 
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 interface IFindRecordOptions {
   dateInterval?: IDateInterval;
-  phoneNumber?: string;
+  searchQuery?: string;
   sorting?: CallRecordsSortingTypes;
+  direction?: CallDirectionTypes;
 }
 
 export function find({
   dateInterval,
   sorting,
-  phoneNumber,
+  searchQuery,
+  direction,
 }: IFindRecordOptions = {}) {
-  console.log(sorting, dateInterval);
-  if (!phoneNumber) {
+  console.log(direction, sorting, dateInterval);
+  if (!searchQuery) {
     return fetch();
   }
-  return findByNumber({ phoneNumber });
+  return findByNumber({ searchQuery });
 }
 
 export async function fetch() {
@@ -25,13 +32,13 @@ export async function fetch() {
   return getRecords();
 }
 
-export async function findByNumber({ phoneNumber }: { phoneNumber: string }) {
+export async function findByNumber({ searchQuery }: { searchQuery: string }) {
   await sleep(500);
   return getRecords().filter(record => {
     const {
       collocutor: { phone },
     } = record;
-    const queryPhoneDigits = phoneNumber.replace(/\D/g, '');
+    const queryPhoneDigits = searchQuery.replace(/\D/g, '');
     return phone.replace(/\D/g, '').includes(queryPhoneDigits);
   });
 }
@@ -44,12 +51,14 @@ export async function remove(id: number) {
   await sleep(500);
 }
 
-export default {
+const CallRecordsService = {
   find,
   fetch,
   findByNumber,
   remove,
 };
+
+export default CallRecordsService;
 
 function getRecords(): ICallRecord[] {
   return [
@@ -66,7 +75,8 @@ function getRecords(): ICallRecord[] {
       // record_id: 1,
       record: {
         id: 1,
-        file: '',
+        file:
+          'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3',
         duration: 10000,
         transcriptions: [
           {
@@ -101,7 +111,7 @@ function getRecords(): ICallRecord[] {
       },
       record: {
         id: 2,
-        file: '',
+        file: 'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg',
         duration: 10000,
         transcriptions: [
           {

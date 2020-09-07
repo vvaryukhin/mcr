@@ -29,11 +29,17 @@ export interface ITranscription {
 export type IDirection = 'incoming' | 'outcoming';
 
 export enum CallRecordsSortingTypes {
-  DATE_ACS,
-  DATE_DES,
-  DURATION_ACS,
-  DURATION_DES,
-  NAME_ALPHABET_ACS,
+  DATE_ACS = 'DATE_ACS',
+  DATE_DES = 'DATE_DES',
+  DURATION_ACS = 'DURATION_ACS',
+  DURATION_DES = 'DURATION_DES',
+  NAME_ALPHABET_ACS = 'NAME_ALPHABET_ACS',
+}
+
+export enum CallDirectionTypes {
+  ALL = 'ALL',
+  INCOMING = 'INCOMING',
+  OUTCOMING = 'OUTCOMING',
 }
 
 export interface IDateInterval {

@@ -16,7 +16,7 @@ const mapStateToProps = (state: IAppState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<ICallRecordAction>) => {
   return {
-    searchByQuery: debounce(200, (query: string) => {
+    setSearchQuery: debounce(200, (query: string) => {
       dispatch(setSearchQuery(query));
     }),
   };

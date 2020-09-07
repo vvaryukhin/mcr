@@ -13,7 +13,7 @@ interface ISelectOption {
 
 const Select = ({ value, options, onChange }: ISelectProps) => {
   return (
-    <div style={{ marginBottom: 15 }}>
+    <div>
       <select onChange={onChange} style={{ width: '100%' }} value={value}>
         {options.map(({ title, value }) => {
           return (
