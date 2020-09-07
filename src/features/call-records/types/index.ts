@@ -27,3 +27,16 @@ export interface ITranscription {
 }
 
 export type IDirection = 'incoming' | 'outcoming';
+
+export enum CallRecordsSortingTypes {
+  DATE_ACS,
+  DATE_DES,
+  DURATION_ACS,
+  DURATION_DES,
+  NAME_ALPHABET_ACS,
+}
+
+export interface IDateInterval {
+  from?: number;
+  to?: number;
+}
