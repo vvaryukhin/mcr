@@ -8,10 +8,7 @@ import {
 } from '../types';
 import { Dispatch } from 'redux';
 import CallRecordsService from '../services';
-
-export const setRecords = makeAction<CallRecordsEvents.SET_RECORDS, ICallRecord[]>(
-  CallRecordsEvents.SET_RECORDS
-);
+import { error } from 'utils';
 
 export const deleteRecord = makeAction<CallRecordsEvents.DELETE_RECORD, number>(
   CallRecordsEvents.DELETE_RECORD
@@ -36,15 +33,18 @@ export const setCallDirection = makeAction<
   CallDirectionTypes
 >(CallRecordsEvents.SET_CALL_DIRECTION);
 
-// async actions
-export const deleteRecordRequest = (id: number) => (
-  dispatch: Dispatch<ICallRecordAction>
-) => {
-  CallRecordsService.remove(id)
-    .then(() => dispatch(deleteRecord(id)))
-    .catch(console.error);
-};
+export const requestRecords = makeAction(CallRecordsEvents.REQUEST_RECORDS);
 
+export const requestRecordsSuccess = makeAction<
+  CallRecordsEvents.REQUEST_RECORDS_SUCCESS,
+  ICallRecord[]
+>(CallRecordsEvents.REQUEST_RECORDS_SUCCESS);
+
+export const requestRecordsFailed = makeAction(
+  CallRecordsEvents.REQUEST_RECORDS_FAILED
+);
+
+// async actions
 export interface IFetchRecordsOptions {
   dateInterval: IDateInterval;
   sorting: CallRecordsSortingTypes;
@@ -58,23 +58,39 @@ export const fetchRecords = ({
   searchQuery,
   direction,
 }: IFetchRecordsOptions) => (dispatch: Dispatch<ICallRecordAction>) => {
+  dispatch(requestRecords());
   CallRecordsService.find({
     dateInterval,
     sorting,
     searchQuery,
     direction,
-  }).then(res => {
-    dispatch(setRecords(res));
-  });
+  })
+    .then(res => {
+      dispatch(requestRecordsSuccess(res));
+    })
+    .catch(err => {
+      error(err);
+      dispatch(requestRecordsFailed());
+    });
+};
+
+export const deleteRecordRequest = (id: number) => (
+  dispatch: Dispatch<ICallRecordAction>
+) => {
+  CallRecordsService.remove(id)
+    .then(() => dispatch(deleteRecord(id)))
+    .catch(console.error);
 };
 
 const actions = {
-  setRecords,
   deleteRecord,
   setSearchQuery,
   setSorting,
   setDateInterval,
   setCallDirection,
+  requestRecords,
+  requestRecordsSuccess,
+  requestRecordsFailed,
 };
 
 export type ICallRecordAction = IActionUnion<typeof actions>;

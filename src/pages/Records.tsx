@@ -1,11 +1,6 @@
 import React from 'react';
+import RecordInfo from 'features/call-records/components/RecordInfo';
 
-function Records() {
-  return (
-    <div>
-      <h2>Ваш звонок</h2>
-    </div>
-  );
+export default function Record() {
+  return <RecordInfo />;
 }
-
-export default Records;

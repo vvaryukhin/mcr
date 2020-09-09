@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
-import CallRecordsList from './component';
+import CallRecordsList, { ICallRecordsListProps } from './component';
 import {
   fetchRecords,
   deleteRecordRequest,
   IFetchRecordsOptions,
 } from 'features/call-records/store';
 import {
-  ICallRecord,
   CallRecordsSortingTypes,
   IDateInterval,
   CallDirectionTypes,
@@ -15,15 +14,12 @@ import { connect } from 'react-redux';
 import { IAppState } from 'store';
 import { setPlayingRecord } from 'features/audio-player/store';
 
-interface IProps {
+interface IProps extends ICallRecordsListProps {
   dateInterval: IDateInterval;
   sorting: CallRecordsSortingTypes;
   searchQuery: string;
   direction: CallDirectionTypes;
-  records: ICallRecord[];
   fetchRecords: (options: IFetchRecordsOptions) => void;
-  deleteRecord: (id: number) => void;
-  setPlayingRecord: (recordId: number) => void;
 }
 
 function CallRecords({
@@ -35,6 +31,8 @@ function CallRecords({
   deleteRecord,
   direction,
   setPlayingRecord,
+  isLoading,
+  isFailed,
 }: IProps) {
   useEffect(() => {
     console.log('effect...');
@@ -51,6 +49,8 @@ function CallRecords({
       records={records}
       deleteRecord={deleteRecord}
       setPlayingRecord={setPlayingRecord}
+      isLoading={isLoading}
+      isFailed={isFailed}
     />
   );
 }
@@ -62,6 +62,8 @@ const mapStateToProps = (state: IAppState) => {
     searchQuery: state.callRecords.searchQuery,
     sorting: state.callRecords.sorting,
     direction: state.callRecords.direction,
+    isLoading: state.callRecords.isLoading,
+    isFailed: state.callRecords.isFailed,
   };
 };
 

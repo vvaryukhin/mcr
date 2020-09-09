@@ -4,26 +4,27 @@ import { useToggle } from 'hooks';
 import { connect } from 'react-redux';
 import { IAppState } from 'store';
 import ProgressBar from '../ProgressBar';
-import { secondsToTime } from 'features/audio-player/utils';
+import { secondsToHHMMSS } from 'utils';
+import { ICallRecord } from 'features/call-records/types';
 
 interface IAudioPlayerProps {
-  src: string | undefined;
+  playingRecord: ICallRecord | null;
 }
 
 const audio = new Audio();
 
-const AudioPlayer = ({ src }: IAudioPlayerProps) => {
+const AudioPlayer = ({ playingRecord }: IAudioPlayerProps) => {
   const [playing, togglePlaying] = useToggle();
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [progressPercent, setProgressPercent] = useState(0);
 
-  const pause = () => {
+  const pause = useCallback(() => {
     if (!audio.paused) {
       audio.pause();
       togglePlaying();
     }
-  };
+  }, [togglePlaying]);
 
   const play = () => {
     if (audio.paused) {
@@ -48,12 +49,13 @@ const AudioPlayer = ({ src }: IAudioPlayerProps) => {
   }, [setDuration]);
 
   useEffect(() => {
-    src && (audio.src = src);
+    playingRecord && (audio.src = playingRecord.record.file);
     audio.addEventListener('loadedmetadata', onLoadMetaData);
     return () => {
+      pause();
       audio.removeEventListener('loadedmetadata', onLoadMetaData);
     };
-  }, [src, onLoadMetaData]);
+  }, [pause, playingRecord, onLoadMetaData]);
 
   useEffect(() => {
     audio.addEventListener('timeupdate', onTimeUpdate);
@@ -71,7 +73,7 @@ const AudioPlayer = ({ src }: IAudioPlayerProps) => {
   return (
     <div
       style={{
-        display: src ? 'block' : 'none',
+        display: playingRecord ? 'block' : 'none',
         position: 'fixed',
         bottom: 0,
         left: 0,
@@ -87,9 +89,9 @@ const AudioPlayer = ({ src }: IAudioPlayerProps) => {
           padding: '10px 0',
         }}
       >
-        <div>{secondsToTime(currentTime)}</div>
+        <div>{secondsToHHMMSS(currentTime)}</div>
         <ProgressBar currentPercent={progressPercent} onUpdate={updateCurrentTime} />
-        <div>{secondsToTime(duration)}</div>
+        <div>{secondsToHHMMSS(duration)}</div>
       </div>
       {playing ? (
         <button onClick={pause}>pause</button>
@@ -101,11 +103,8 @@ const AudioPlayer = ({ src }: IAudioPlayerProps) => {
 };
 
 const mapStateToProps = (state: IAppState) => {
-  const { records } = state.callRecords;
-  const { recordId: selectedRecordId } = state.audioPlayer;
-  const selectedRecord = records.find(({ id }) => id === selectedRecordId);
   return {
-    src: selectedRecord && selectedRecord.record.file,
+    playingRecord: state.audioPlayer.playingRecord,
   };
 };
 

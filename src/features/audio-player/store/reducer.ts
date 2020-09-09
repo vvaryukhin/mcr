@@ -1,12 +1,13 @@
 import { AudioPlayerEvents } from './events';
 import { IAudioPlayerActions } from './actions';
+import { ICallRecord } from 'features/call-records/types';
 
 interface IPlayerState {
-  recordId: number;
+  playingRecord: ICallRecord | null;
 }
 
 const initialState: IPlayerState = {
-  recordId: -1,
+  playingRecord: null,
 };
 
 export function reducer(
@@ -14,8 +15,8 @@ export function reducer(
   action: IAudioPlayerActions
 ): IPlayerState {
   switch (action.type) {
-    case AudioPlayerEvents.SET_PLAYING_RECORD_ID:
-      return { ...state, recordId: action.payload };
+    case AudioPlayerEvents.SET_PLAYING_RECORD:
+      return { ...state, playingRecord: action.payload };
     default:
       return state;
   }

@@ -1,5 +1,2 @@
-export const functionSanityCheck = (fn: any) => {
-  it('defined', () => {
-    expect(fn).toBeDefined();
-  });
-};
+export { default as functionSanityCheck } from './function-sanity-check';
+export { default as reducerSanityCheck } from './function-sanity-check';

@@ -12,9 +12,10 @@
     "plugin:react/recommended",
     "plugin:prettier/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended"
   ],
-  "plugins": ["prettier", "import", "react", "@typescript-eslint"],
+  "plugins": ["prettier", "import", "react", "react-hooks", "@typescript-eslint"],
   "parserOptions": {
     "parser": "babel-eslint",
     "ecmaVersion": 2018,
@@ -33,7 +34,8 @@
       // enable the rule specifically for TypeScript files
       "files": ["*.ts", "*.tsx"],
       "rules": {
-        "@typescript-eslint/explicit-module-boundary-types": ["off"]
+        "@typescript-eslint/explicit-module-boundary-types": ["off"],
+        "@typescript-eslint/no-explicit-any": ["off"]
       }
     }
   ],
