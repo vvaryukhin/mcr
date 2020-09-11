@@ -1,23 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface ISearchProps {
   query: string;
-  searchByQuery: (value: string) => void;
+  setSearchQuery: (value: string) => void;
 }
 
-const Search = ({ query, searchByQuery }: ISearchProps) => {
-  const [value, setValue] = useState(query);
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setValue(newValue);
-    searchByQuery(newValue);
-  };
+const Search = ({ setSearchQuery }: ISearchProps) => {
   return (
     <div>
       <input
         type="text"
-        onChange={onChange}
-        value={value}
+        onChange={e => setSearchQuery(e.target.value)}
         style={{
           boxSizing: 'border-box',
           padding: 5,

@@ -1,5 +1,5 @@
 import { IAnyFunction, IFunctionThisType } from 'types';
-import { isNumber } from 'util';
+import { isNumber } from 'utils';
 
 export default function debounce<T extends IAnyFunction>(ms: number, fn: T) {
   let timeoutId: number | null;

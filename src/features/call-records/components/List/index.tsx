@@ -1,27 +1,29 @@
 import React, { useEffect } from 'react';
 import CallRecordsList from './component';
-import CallRecordsService from 'features/call-records/services';
 import {
-  setRecords,
-  deleteRecord,
-  ICallRecordAction,
-} from 'features/call-records/store/actions';
+  fetchRecords,
+  deleteRecordRequest,
+  IFetchRecordsOptions,
+} from 'features/call-records/store';
 import {
   ICallRecord,
   CallRecordsSortingTypes,
   IDateInterval,
+  CallDirectionTypes,
 } from 'features/call-records/types';
 import { connect } from 'react-redux';
 import { IAppState } from 'store';
-import { Dispatch } from 'redux';
+import { setPlayingRecord } from 'features/audio-player/store';
 
 interface IProps {
   dateInterval: IDateInterval;
   sorting: CallRecordsSortingTypes;
   searchQuery: string;
+  direction: CallDirectionTypes;
   records: ICallRecord[];
-  setRecords: (records: ICallRecord[]) => void;
+  fetchRecords: (options: IFetchRecordsOptions) => void;
   deleteRecord: (id: number) => void;
+  setPlayingRecord: (recordId: number) => void;
 }
 
 function CallRecords({
@@ -29,21 +31,28 @@ function CallRecords({
   sorting,
   searchQuery,
   records,
-  setRecords,
+  fetchRecords,
   deleteRecord,
+  direction,
+  setPlayingRecord,
 }: IProps) {
   useEffect(() => {
     console.log('effect...');
-    CallRecordsService.find({
+    fetchRecords({
       dateInterval,
       sorting,
-      phoneNumber: searchQuery,
-    }).then(res => {
-      setRecords(res);
+      searchQuery,
+      direction,
     });
-  }, [dateInterval, sorting, searchQuery, setRecords]);
+  }, [direction, dateInterval, sorting, searchQuery, fetchRecords]);
 
-  return <CallRecordsList records={records} deleteRecord={deleteRecord} />;
+  return (
+    <CallRecordsList
+      records={records}
+      deleteRecord={deleteRecord}
+      setPlayingRecord={setPlayingRecord}
+    />
+  );
 }
 
 const mapStateToProps = (state: IAppState) => {
@@ -52,18 +61,14 @@ const mapStateToProps = (state: IAppState) => {
     records: state.callRecords.records,
     searchQuery: state.callRecords.searchQuery,
     sorting: state.callRecords.sorting,
+    direction: state.callRecords.direction,
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<ICallRecordAction>) => {
-  return {
-    setRecords: (records: ICallRecord[]) => {
-      dispatch(setRecords(records));
-    },
-    deleteRecord: (id: number) => {
-      CallRecordsService.remove(id).then(() => dispatch(deleteRecord(id)));
-    },
-  };
+const mapDispatchToProps = {
+  fetchRecords,
+  deleteRecord: deleteRecordRequest,
+  setPlayingRecord,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CallRecords);

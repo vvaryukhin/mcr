@@ -1,10 +1,9 @@
 import useLazyEffect from 'hooks/use-lazy-effect';
 import { renderHook } from '@testing-library/react-hooks';
+import { functionSanityCheck } from 'test-utils';
 
 describe('useLazyEffect', () => {
-  it('defined', () => {
-    expect(useLazyEffect).toBeDefined();
-  });
+  functionSanityCheck(useLazyEffect);
 
   it("shouldn't call callback on initial render", () => {
     const dummy = jest.fn();
