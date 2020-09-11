@@ -28,7 +28,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --watchAll=false",
+    "test": "react-scripts test --watchAll=false --testPathIgnorePatterns=\"fixtures/*\"",
     "eject": "react-scripts eject",
     "lint:scripts": "./node_modules/.bin/eslint \"./src/**/*.{js,jsx,ts,tsx}\"",
     "lint:scripts:fix": "./node_modules/.bin/eslint \"./src/**/*.{js,jsx,ts,tsx}\" --fix",
@@ -74,7 +74,10 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "yarn lint:scripts:fix",
-    "*.{css,scss}": "lint:styles:fix"
+    "*.{js,jsx,ts,tsx}": [
+      "yarn lint:scripts:fix",
+      "yarn test"
+    ],
+    "*.{css,scss}": "yarn lint:styles:fix"
   }
 }

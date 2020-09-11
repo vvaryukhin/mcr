@@ -1,15 +1,12 @@
 import React from 'react';
 import CallRecordsList from '../component';
-import { functionSanityCheck } from 'test-utils';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { noop } from 'utils';
-import fakeRecords from './fixtures/call-records';
-import { BrowserRouter } from 'react-router-dom';
+import fakeRecords from '../../../fixtures/call-records';
+import { renderWithRouter } from 'test-utils';
 
 describe('CallRecordsList', () => {
-  functionSanityCheck(CallRecordsList);
-
   it('should show loader when isLoading props is true', () => {
     let props = {
       records: [],
@@ -49,16 +46,27 @@ describe('CallRecordsList', () => {
       isFailed: false,
       isLoading: false,
     };
-    render(
-      <BrowserRouter>
-        <CallRecordsList {...props} />
-      </BrowserRouter>
-    );
+    renderWithRouter(<CallRecordsList {...props} />);
     const item = screen.getByTestId('call-records-list/item');
     userEvent.click(item);
     expect(props.setPlayingRecord).toBeCalledTimes(1);
     expect(props.setPlayingRecord).toBeCalledWith(testRecord);
   });
 
-  it.todo('should call deleteRecord when user clicks on deleteButton');
+  it('should call deleteRecord when user clicks on deleteButton', () => {
+    const testRecord = fakeRecords[0];
+    const props = {
+      records: [testRecord],
+      setPlayingRecord: jest.fn(),
+      deleteRecord: jest.fn(),
+      isFailed: false,
+      isLoading: false,
+    };
+    renderWithRouter(<CallRecordsList {...props} />);
+    const item = screen.getByTestId('call-records-list/item/delete');
+    userEvent.click(item);
+    expect(props.deleteRecord).toBeCalledTimes(1);
+    expect(props.deleteRecord).toBeCalledWith(testRecord.id);
+    expect(props.setPlayingRecord).not.toBeCalled();
+  });
 });

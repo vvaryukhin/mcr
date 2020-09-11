@@ -98,20 +98,28 @@ function getRecords(): ICallRecord[] {
         duration: 10000,
         transcriptions: [
           {
+            id: 5,
             text: 'Привет',
             createdAt: getDate(),
+            direction: 'incoming',
           },
           {
+            id: 6,
             text: 'Привет!',
             createdAt: getDate(),
+            direction: 'outcoming',
           },
           {
+            id: 7,
             text: 'Как дела?',
             createdAt: getDate(),
+            direction: 'incoming',
           },
           {
+            id: 8,
             text: 'Нормально.',
             createdAt: getDate(),
+            direction: 'outcoming',
           },
         ],
       },
@@ -132,21 +140,24 @@ function getRecords(): ICallRecord[] {
         file: 'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg',
         duration: 10000,
         transcriptions: [
+          { id: 1, text: 'Здарова', createdAt: getDate(), direction: 'outcoming' },
           {
-            text: 'Здарова',
-            createdAt: getDate(),
-          },
-          {
+            id: 2,
             text: 'Привет!',
             createdAt: getDate(),
+            direction: 'incoming',
           },
           {
+            id: 3,
             text: 'Как сам?',
             createdAt: getDate(),
+            direction: 'outcoming',
           },
           {
+            id: 4,
             text: 'Как джип нисан.',
             createdAt: getDate(),
+            direction: 'incoming',
           },
         ],
       },

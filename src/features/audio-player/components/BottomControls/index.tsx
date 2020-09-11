@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { toInt } from 'utils';
 import { useToggle } from 'hooks';
 import { connect } from 'react-redux';
@@ -11,67 +11,59 @@ interface IAudioPlayerProps {
   playingRecord: ICallRecord | null;
 }
 
-const audio = new Audio();
-
-const AudioPlayer = ({ playingRecord }: IAudioPlayerProps) => {
+export const AudioPlayer = ({ playingRecord }: IAudioPlayerProps) => {
   const [playing, togglePlaying] = useToggle();
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [progressPercent, setProgressPercent] = useState(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const pause = useCallback(() => {
-    if (!audio.paused) {
+    const { current: audio } = audioRef;
+    if (audio && !audio.paused) {
       audio.pause();
       togglePlaying();
     }
   }, [togglePlaying]);
 
   const play = () => {
-    if (audio.paused) {
+    const { current: audio } = audioRef;
+    if (audio && audio.paused) {
       audio.play();
       togglePlaying();
     }
   };
 
-  const onTimeUpdate = useCallback(
-    (e: Event) => {
-      const currentTime = toInt((e.target as HTMLAudioElement).currentTime);
-      const currentPercent = (currentTime / duration) * 100;
-      setProgressPercent(currentPercent);
-      setCurrentTime(currentTime);
-    },
-    [duration, setProgressPercent, setCurrentTime]
-  );
+  const onTimeUpdate = (e: React.SyntheticEvent<HTMLAudioElement, Event>) => {
+    const currentTime = toInt((e.target as HTMLAudioElement).currentTime);
+    const currentPercent = (currentTime / duration) * 100;
+    setProgressPercent(currentPercent);
+    setCurrentTime(currentTime);
+  };
 
-  const onLoadMetaData = useCallback(() => {
-    const intDuration = toInt(audio.duration);
+  const onLoadedMetaData = () => {
+    const intDuration = toInt(audioRef.current?.duration);
     setDuration(intDuration);
-  }, [setDuration]);
+  };
 
   useEffect(() => {
-    playingRecord && (audio.src = playingRecord.record.file);
-    audio.addEventListener('loadedmetadata', onLoadMetaData);
-    return () => {
-      pause();
-      audio.removeEventListener('loadedmetadata', onLoadMetaData);
-    };
-  }, [pause, playingRecord, onLoadMetaData]);
-
-  useEffect(() => {
-    audio.addEventListener('timeupdate', onTimeUpdate);
-    audio.addEventListener('ended', togglePlaying);
-    return () => {
-      audio.removeEventListener('timeupdate', onTimeUpdate);
-      audio.removeEventListener('ended', togglePlaying);
-    };
-  }, [onTimeUpdate, togglePlaying]);
+    const { current: audio } = audioRef;
+    if (playingRecord && audio) {
+      audio.src = playingRecord.record.file;
+    }
+    return pause;
+  }, [pause, playingRecord]);
 
   const updateCurrentTime = (percent: number) => {
-    audio.currentTime = (percent / 100) * duration;
+    const { current: audio } = audioRef;
+    if (audio) {
+      audio.currentTime = (percent / 100) * duration;
+    }
   };
 
   return (
     <div
+      data-test-id="audio-player"
       style={{
         display: playingRecord ? 'block' : 'none',
         position: 'fixed',
@@ -82,6 +74,13 @@ const AudioPlayer = ({ playingRecord }: IAudioPlayerProps) => {
         padding: 10,
       }}
     >
+      <audio
+        ref={audioRef}
+        onLoadedMetadata={onLoadedMetaData}
+        onTimeUpdate={onTimeUpdate}
+        onEnded={togglePlaying}
+        style={{ display: 'none' }}
+      ></audio>
       <div
         style={{
           display: 'flex',
@@ -94,9 +93,13 @@ const AudioPlayer = ({ playingRecord }: IAudioPlayerProps) => {
         <div>{secondsToHHMMSS(duration)}</div>
       </div>
       {playing ? (
-        <button onClick={pause}>pause</button>
+        <button onClick={pause} data-test-id="audio-player/pause">
+          pause
+        </button>
       ) : (
-        <button onClick={play}>play</button>
+        <button onClick={play} data-test-id="audio-player/play">
+          play
+        </button>
       )}
     </div>
   );

@@ -71,6 +71,7 @@ const CallRecordsList = ({
                     e.stopPropagation();
                     deleteRecord(call.id);
                   }}
+                  data-test-id="call-records-list/item/delete"
                 >
                   Delete
                 </button>

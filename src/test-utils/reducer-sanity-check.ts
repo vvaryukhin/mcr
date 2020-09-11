@@ -1,10 +1,6 @@
-import { functionSanityCheck } from 'test-utils';
-
 const UNMATCHED_ACTION = { type: 'UNMATCHED_ACTION', payload: null };
 
 export default function reducerSanityCheck(reducer: any) {
-  functionSanityCheck(reducer);
-
   it('returns the same state as passed in if no action matches', () => {
     const expected = { foo: 1 };
     const actual = reducer({ foo: 1 }, UNMATCHED_ACTION);

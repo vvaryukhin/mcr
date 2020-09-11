@@ -4,7 +4,10 @@ import { secondsToHHMMSS } from 'utils';
 
 const getName = (record: ICallRecord) => {
   const { firstName, lastName, middleName } = record.collocutor;
-  return `${lastName} ${firstName} ${middleName}`;
+  if (firstName && lastName && middleName) {
+    return `${lastName} ${firstName} ${middleName}`;
+  }
+  return null;
 };
 
 const timestampMessageTime = (timestamp: number) => {
@@ -24,10 +27,11 @@ const RecordInfoView = ({
   showTranscription,
   toggleShowTranscription,
 }: IRecordInfoViewProps) => {
+  const collocutorName = getName(record);
   return (
     <>
       <h2>Ваш звонок</h2>
-      <h5>{getName(record)}</h5>
+      {collocutorName && <h5>{collocutorName}</h5>}
       <div>Длительность: {secondsToHHMMSS(record.record.duration)}</div>
       <div style={{ marginTop: '20px' }}>
         <button onClick={() => setPlayingRecord(record)}>Play</button>
@@ -37,23 +41,30 @@ const RecordInfoView = ({
         <button onClick={toggleShowTranscription}>
           {showTranscription ? 'close' : 'open'}
         </button>
-        {showTranscription ? (
-          <div>
-            {record.record.transcriptions.map(({ text, createdAt }) => (
-              <div
-                style={{
-                  padding: '8px',
-                  margin: '10px 0',
-                  background: 'lightblue',
-                }}
-                key={'message-' + createdAt}
-              >
-                <div>{text}</div>
-                <small>{timestampMessageTime(createdAt)}</small>
-              </div>
-            ))}
+        {showTranscription && (
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {record.record.transcriptions.map(
+              ({ id, text, createdAt, direction }) => (
+                <div
+                  style={{
+                    borderRadius: '3px',
+                    maxWidth: '80%',
+                    padding: '8px',
+                    margin: '5px 0',
+                    background: 'lightblue',
+                    alignSelf: direction === 'incoming' ? 'flex-start' : 'flex-end',
+                  }}
+                  key={'message-' + id}
+                >
+                  <div>{text}</div>
+                  <div style={{ textAlign: 'right', fontSize: '10px' }}>
+                    {timestampMessageTime(createdAt)}
+                  </div>
+                </div>
+              )
+            )}
           </div>
-        ) : null}
+        )}
       </div>
     </>
   );

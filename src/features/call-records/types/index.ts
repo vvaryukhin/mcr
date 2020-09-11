@@ -8,9 +8,9 @@ export interface ICallRecord {
 }
 
 export interface ICollocutor {
-  firstName: string;
-  lastName: string;
-  middleName: string;
+  firstName?: string;
+  lastName?: string;
+  middleName?: string;
   phone: string;
 }
 
@@ -22,8 +22,10 @@ export interface IRecord {
 }
 
 export interface ITranscription {
+  id: number;
   text: string;
   createdAt: number;
+  direction: IDirection;
 }
 
 export type IDirection = 'incoming' | 'outcoming';
