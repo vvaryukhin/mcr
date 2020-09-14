@@ -29,6 +29,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false --testPathIgnorePatterns=\"fixtures/*\"",
+    "test:coverage": "react-scripts test --watchAll=false --testPathIgnorePatterns=\"fixtures/*\" --collectCoverage --collectCoverageFrom='./src/**/*.ts'",
     "eject": "react-scripts eject",
     "lint:scripts": "./node_modules/.bin/eslint \"./src/**/*.{js,jsx,ts,tsx}\"",
     "lint:scripts:fix": "./node_modules/.bin/eslint \"./src/**/*.{js,jsx,ts,tsx}\" --fix",
