@@ -5,3 +5,6 @@ export { default as isFunction } from './is-function';
 export { default as isArray } from './is-array';
 export { default as toInt } from './to-int';
 export { default as debounce } from './debounce';
+export { default as secondsToHHMMSS } from './seconds-to-hh-mm-ss';
+export { default as noop } from './noop';
+export { default as error } from './error';

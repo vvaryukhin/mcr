@@ -1,9 +1,6 @@
 import toRange from '../to-range';
-import { functionSanityCheck } from 'test-utils';
 
 describe('toRange', () => {
-  functionSanityCheck(toRange);
-
   it('should return passed number if it is in a range', () => {
     const value = 10;
     const actual = toRange(value, [0, 50]);

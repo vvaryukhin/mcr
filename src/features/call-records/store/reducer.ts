@@ -13,6 +13,8 @@ interface ICallRecordsState {
   sorting: CallRecordsSortingTypes;
   dateInterval: IDateInterval;
   direction: CallDirectionTypes;
+  isLoading: boolean;
+  isFailed: boolean;
 }
 
 const initialState: ICallRecordsState = {
@@ -21,6 +23,8 @@ const initialState: ICallRecordsState = {
   sorting: CallRecordsSortingTypes.DATE_ACS,
   dateInterval: {},
   direction: CallDirectionTypes.ALL,
+  isLoading: false,
+  isFailed: false,
 };
 
 export function reducer(
@@ -28,8 +32,17 @@ export function reducer(
   action: ICallRecordAction
 ): ICallRecordsState {
   switch (action.type) {
-    case CallRecordsEvents.SET_RECORDS:
-      return { ...state, records: action.payload };
+    case CallRecordsEvents.REQUEST_RECORDS:
+      return { ...state, isLoading: true };
+    case CallRecordsEvents.REQUEST_RECORDS_SUCCESS:
+      return {
+        ...state,
+        records: action.payload,
+        isLoading: false,
+        isFailed: false,
+      };
+    case CallRecordsEvents.REQUEST_RECORDS_FAILED:
+      return { ...state, isFailed: true, isLoading: false };
     case CallRecordsEvents.DELETE_RECORD:
       return {
         ...state,

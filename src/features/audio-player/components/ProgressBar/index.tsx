@@ -25,9 +25,9 @@ const ProgressBar = ({ currentPercent, onUpdate }: IProgressBarProps) => {
         width: progressBarWidth,
       } = progressBarRect.current;
       const clientX = e.touches[0].clientX;
-      const clickOffset = clientX - progressBarLeft;
-      const coefficient = clickOffset / progressBarWidth;
-      const percent = toRange(coefficient * 100, [0, 100]);
+      const touchOffsetFromStart = clientX - progressBarLeft;
+      const progressCoefficient = touchOffsetFromStart / progressBarWidth;
+      const percent = toRange(progressCoefficient * 100, [0, 100]);
       setProgressPercent(percent);
     }
   };
@@ -57,6 +57,7 @@ const ProgressBar = ({ currentPercent, onUpdate }: IProgressBarProps) => {
         flex: '1',
         margin: '0 10px',
       }}
+      data-test-id="progress-bar"
     >
       <div
         style={{
@@ -84,6 +85,7 @@ const ProgressBar = ({ currentPercent, onUpdate }: IProgressBarProps) => {
             width: `${progressPercent}%`,
             background: '#f50',
           }}
+          data-test-id="progress-bar/progress-line"
         ></div>
       </div>
     </div>

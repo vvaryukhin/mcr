@@ -4,6 +4,7 @@ import {
   CallDirectionTypes,
   CallRecordsSortingTypes,
 } from '../types';
+// import config from 'config';
 
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
 
@@ -43,6 +44,11 @@ export async function findByNumber({ searchQuery }: { searchQuery: string }) {
   });
 }
 
+export async function findById(_id: number) {
+  await sleep(500);
+  return getRecords().find(({ id }) => id === _id);
+}
+
 // from what I remember you can not use delete
 // in function names on ie
 // TODO check wether it's possible
@@ -53,12 +59,24 @@ export async function remove(id: number) {
 
 const CallRecordsService = {
   find,
-  fetch,
+  findById,
   findByNumber,
   remove,
 };
 
 export default CallRecordsService;
+
+const ONE_MINUTE_IN_MS = 60_000;
+
+function makeGetDate() {
+  let date = new Date('08/31/2020').getTime();
+  return function getDate() {
+    date += ONE_MINUTE_IN_MS;
+    return date;
+  };
+}
+
+const getDate = makeGetDate();
 
 function getRecords(): ICallRecord[] {
   return [
@@ -80,24 +98,32 @@ function getRecords(): ICallRecord[] {
         duration: 10000,
         transcriptions: [
           {
+            id: 5,
             text: 'Привет',
-            createdAt: 10000000,
+            createdAt: getDate(),
+            direction: 'incoming',
           },
           {
+            id: 6,
             text: 'Привет!',
-            createdAt: 10000001,
+            createdAt: getDate(),
+            direction: 'outcoming',
           },
           {
+            id: 7,
             text: 'Как дела?',
-            createdAt: 10000002,
+            createdAt: getDate(),
+            direction: 'incoming',
           },
           {
+            id: 8,
             text: 'Нормально.',
-            createdAt: 10000003,
+            createdAt: getDate(),
+            direction: 'outcoming',
           },
         ],
       },
-      createdAt: 10000000,
+      createdAt: getDate(),
       deletedAt: null,
     },
     {
@@ -114,25 +140,28 @@ function getRecords(): ICallRecord[] {
         file: 'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg',
         duration: 10000,
         transcriptions: [
+          { id: 1, text: 'Здарова', createdAt: getDate(), direction: 'outcoming' },
           {
-            text: 'Здарова',
-            createdAt: 10000000,
-          },
-          {
+            id: 2,
             text: 'Привет!',
-            createdAt: 10000001,
+            createdAt: getDate(),
+            direction: 'incoming',
           },
           {
+            id: 3,
             text: 'Как сам?',
-            createdAt: 10000002,
+            createdAt: getDate(),
+            direction: 'outcoming',
           },
           {
+            id: 4,
             text: 'Как джип нисан.',
-            createdAt: 10000003,
+            createdAt: getDate(),
+            direction: 'incoming',
           },
         ],
       },
-      createdAt: 10000000,
+      createdAt: getDate(),
       deletedAt: null,
     },
   ];

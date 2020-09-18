@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.0.2",
+    "@testing-library/user-event": "^12.1.4",
     "@types/jest": "^24.0.0",
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
@@ -28,7 +28,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --watchAll=false",
+    "test": "react-scripts test --watchAll=false --testPathIgnorePatterns=\"fixtures/*\"",
+    "test:coverage": "react-scripts test --watchAll=false --testPathIgnorePatterns=\"fixtures/*\" --collectCoverage --collectCoverageFrom='./src/**/*.ts'",
     "eject": "react-scripts eject",
     "lint:scripts": "./node_modules/.bin/eslint \"./src/**/*.{js,jsx,ts,tsx}\"",
     "lint:scripts:fix": "./node_modules/.bin/eslint \"./src/**/*.{js,jsx,ts,tsx}\" --fix",
@@ -59,6 +60,7 @@
     "eslint-loader": "^4.0.2",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-react-hooks": "^4.1.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.13",
     "prettier": "^2.1.1",
@@ -73,7 +75,10 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "lint:scripts:fix --cache",
-    "*.{css,scss}": "lint:styles:fix"
+    "*.{js,jsx,ts,tsx}": [
+      "yarn lint:scripts:fix",
+      "yarn test"
+    ],
+    "*.{css,scss}": "yarn lint:styles:fix"
   }
 }
