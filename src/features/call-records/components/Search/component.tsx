@@ -7,7 +7,7 @@ interface ISearchProps {
 
 const Search = ({ setSearchQuery }: ISearchProps) => {
   return (
-    <div>
+    <div style={{ margin: '20px 0' }}>
       <input
         type="text"
         onChange={e => setSearchQuery(e.target.value)}

@@ -1,4 +1,4 @@
-import { IAnyFunction } from 'types';
+import { AnyFunction } from 'types';
 
 export function makeAction<T extends string>(type: T): () => { type: T };
 export function makeAction<T extends string, P>(
@@ -13,6 +13,6 @@ export function makeAction<T extends string, P>(type: T) {
   };
 }
 
-export type IActionUnion<A extends Record<string, IAnyFunction>> = ReturnType<
+export type IActionUnion<A extends Record<string, AnyFunction>> = ReturnType<
   A[keyof A]
 >;

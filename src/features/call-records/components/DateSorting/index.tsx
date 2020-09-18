@@ -1,16 +1,39 @@
-import DateSorting from './component';
-import { connect } from 'react-redux';
-import { IAppState } from 'store';
-import { setDateInterval } from 'features/call-records/store/actions';
+import React from 'react';
+import { IDateInterval } from 'features/call-records/types';
+import { isNaN } from 'utils';
+import DateSortingView from './component';
+import { timestampToDateString } from 'features/call-records/utils';
 
-const mapStateToProps = (state: IAppState) => {
-  return {
-    dateInterval: state.callRecords.dateInterval,
+interface IDateSortingProps {
+  value: IDateInterval;
+  onChange: (payload: IDateInterval) => void;
+}
+
+const DateSorting = ({ value, onChange }: IDateSortingProps) => {
+  const onFromChange = makeOnChange(timestamp =>
+    onChange({ ...value, from: timestamp })
+  );
+  const onToChange = makeOnChange(timestamp =>
+    onChange({ ...value, to: timestamp })
+  );
+
+  return (
+    <DateSortingView
+      to={timestampToDateString(value.to)}
+      from={timestampToDateString(value.from)}
+      onToChange={onToChange}
+      onFromChange={onFromChange}
+    />
+  );
+};
+
+function makeOnChange(cb: (value: number) => void) {
+  return (e: React.ChangeEvent<HTMLInputElement>) => {
+    const timestamp = new Date(e.target.value).getTime();
+    if (!isNaN(timestamp)) {
+      cb(timestamp);
+    }
   };
-};
+}
 
-const mapDispatchToProps = {
-  setDateInterval,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DateSorting);
+export default DateSorting;

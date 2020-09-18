@@ -13,17 +13,15 @@ interface ISelectOption {
 
 const Select = ({ value, options, onChange }: ISelectProps) => {
   return (
-    <div>
-      <select onChange={onChange} style={{ width: '100%' }} value={value}>
-        {options.map(({ title, value }) => {
-          return (
-            <option key={`option-${value}`} value={value}>
-              {title}
-            </option>
-          );
-        })}
-      </select>
-    </div>
+    <select onChange={onChange} style={{ width: '100%' }} value={value}>
+      {options.map(({ title, value }) => {
+        return (
+          <option key={`option-${value}`} value={value}>
+            {title}
+          </option>
+        );
+      })}
+    </select>
   );
 };
 
