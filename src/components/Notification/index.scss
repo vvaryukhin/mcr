@@ -1,0 +1,61 @@
+@import 'assets/styles/variables';
+
+$notification-container-left: 20;
+$notification-container-max-width: 400;
+
+.notification-container {
+  position: fixed;
+  top: 0;
+  right: 20px;
+  width: calc(100% - 40px);
+  max-width: 400px;
+  z-index: 200;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 50px;
+  background: $color-white;
+  box-shadow:
+    rgba($color-black, 0.1) 0 5px 18px 0,
+    rgba($color-black, 0.05) 0 1px 3px 0;
+  border-radius: 7px;
+  margin-top: 10px;
+  transform: translateX(0);
+  transition: transform 300ms $base-transition-easing;
+
+  &--inserting {
+    transform: translateX(100%);
+  }
+
+  &--removing-right {
+    transform: translateX(100%);
+  }
+
+  &--removing-left {
+    transform: translateX(-100%);
+  }
+}
+
+.notification__content {
+  padding: 10px;
+  flex: 1;
+  border-right: 1px solid $color-gray-light;
+}
+
+// .notification__title {
+// }
+
+.notification__message {
+  font-size: 12px;
+}
+
+.notification__closer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 100%;
+}

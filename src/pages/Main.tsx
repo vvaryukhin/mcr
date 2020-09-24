@@ -7,8 +7,10 @@ import Filters from 'features/call-records/components/Filters';
 function Main() {
   return (
     <div>
-      <h2>Ваши звонки</h2>
-      <Filters />
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <h2 className="heading">Ваши звонки</h2>
+        <Filters />
+      </div>
       <CallDirectionSelect />
       <CallRecordsSearch />
       <CallRecordsList />

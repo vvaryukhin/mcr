@@ -29,11 +29,20 @@ const orderSelectOptions = [
 
 const OrderSorting = ({ selectedSorting, setSorting }: IRecordSortingProps) => {
   return (
-    <Select
-      options={orderSelectOptions}
-      onChange={e => setSorting(e.target.value as CallRecordsSortingTypes)}
-      value={selectedSorting}
-    />
+    <>
+      <h4 className="heading" style={{ marginBottom: 5 }}>
+        Sorting
+      </h4>
+      <Select
+        options={orderSelectOptions}
+        onChange={e => setSorting(e.target.value as CallRecordsSortingTypes)}
+        value={selectedSorting}
+        style={{
+          width: '90%',
+          margin: 'auto',
+        }}
+      />
+    </>
   );
 };
 

@@ -1,0 +1,36 @@
+@import 'assets/styles/variables';
+
+.transcription {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+}
+
+.transcription__title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.transcription__item {
+  border-radius: $base-border-radius;
+  max-width: 80%;
+  padding: 8px;
+  margin: 5px 0;
+  background: $color-white;
+  color: $color-blue-darkest;
+
+  &--outcoming {
+    align-self: flex-end;
+  }
+
+  &--incoming {
+    align-self: flex-start;
+  }
+}
+
+// .transcription__text {}
+
+.transcription__time {
+  text-align: right;
+  font-size: 10px;
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ICallRecord } from 'features/call-records/types';
+import { CallDirections, ICallRecord } from 'features/call-records/types';
 import { secondsToHHMMSS } from 'utils';
 
 const getName = (record: ICallRecord) => {
@@ -31,7 +31,7 @@ const RecordInfoView = ({
   return (
     <>
       <h2>Ваш звонок</h2>
-      {collocutorName && <h5>{collocutorName}</h5>}
+      {collocutorName && <h5 className="heading">{collocutorName}</h5>}
       <div>Длительность: {secondsToHHMMSS(record.record.duration)}</div>
       <div style={{ marginTop: '20px' }}>
         <button onClick={() => setPlayingRecord(record)}>Play</button>
@@ -52,7 +52,10 @@ const RecordInfoView = ({
                     padding: '8px',
                     margin: '5px 0',
                     background: 'lightblue',
-                    alignSelf: direction === 'incoming' ? 'flex-start' : 'flex-end',
+                    alignSelf:
+                      direction === CallDirections.INCOMING
+                        ? 'flex-start'
+                        : 'flex-end',
                   }}
                   key={'message-' + id}
                 >

@@ -1,0 +1,50 @@
+@import 'assets/styles/variables';
+
+.record-info {
+  font-size: 12px;
+
+  &--light {
+    color: $color-white;
+
+    .record-info__name {
+      color: $color-white;
+    }
+
+    .record-info__call-direction {
+      fill: $color-white;
+    }
+  }
+
+  &--error {
+    color: $color-red;
+
+    .record-info__name {
+      color: $color-red;
+    }
+
+    .record-info__call-direction {
+      fill: $color-red;
+    }
+  }
+}
+
+.record-info__collocutor {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.record-info__call-direction {
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
+  fill: $color-gray;
+}
+
+.record-info__name {
+  font-size: 13px;
+  margin-right: 5px;
+}
+
+.record-info__date {
+  margin-right: 20px;
+}

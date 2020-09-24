@@ -1,0 +1,65 @@
+@import 'assets/styles/variables';
+@import 'assets/styles/animations';
+
+.records-list {
+  min-height: 200px;
+  position: relative;
+}
+
+.records-list__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  font-size: 12px;
+  border-top: 1px solid $color-gray-light;
+
+  &:first-of-type,
+  &--active + & {
+    border-color: transparent;
+  }
+
+  &--active {
+    border-color: transparent;
+    border-radius: $base-border-radius;
+    background: $color-gray-lighter;
+  }
+
+  &--loading {
+    opacity: 0.6;
+  }
+
+  &--error-shake {
+    @include shake;
+  }
+}
+
+.records-list__item-menu {
+  position: relative;
+}
+
+.records-list__item-menu-button {
+  width: 16px;
+  height: 16px;
+
+  &--sound-waves {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.records-list__item-menu-icon {
+  max-width: 100%;
+  max-height: 100%;
+  color: $color-blue-darkest;
+}
+
+.records-list__delete-item-modal {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+
+.records-list__delete-item-button {
+  color: $color-red;
+}

@@ -3,7 +3,7 @@ import { reducerSanityCheck } from 'test-utils';
 import {
   requestRecords,
   requestRecordsSuccess,
-  requestRecordsFailed,
+  requestRecordsFail,
   setSearchQuery,
   setSorting,
   setCallDirection,
@@ -12,7 +12,7 @@ import {
 import fakeRecords from 'features/call-records/fixtures/call-records';
 import {
   CallRecordsSortingTypes,
-  CallDirectionTypes,
+  CallDirectionFilters,
 } from 'features/call-records/types';
 
 describe('callRecordsReducer', () => {
@@ -38,9 +38,7 @@ describe('callRecordsReducer', () => {
     const actual = {} as any;
     const expected = { isLoading: false, isFailed: true };
 
-    expect(callRecordsReducer(actual, requestRecordsFailed())).toStrictEqual(
-      expected
-    );
+    expect(callRecordsReducer(actual, requestRecordsFail())).toStrictEqual(expected);
   });
 
   it('setSearchQuery', () => {
@@ -78,11 +76,11 @@ describe('callRecordsReducer', () => {
   });
 
   it('setCallDirection', () => {
-    const actual = { direction: CallDirectionTypes.ALL } as any;
-    const expected = { direction: CallDirectionTypes.INCOMING };
+    const actual = { direction: CallDirectionFilters.ALL } as any;
+    const expected = { direction: CallDirectionFilters.INCOMING };
 
     expect(
-      callRecordsReducer(actual, setCallDirection(CallDirectionTypes.INCOMING))
+      callRecordsReducer(actual, setCallDirection(CallDirectionFilters.INCOMING))
     ).toStrictEqual(expected);
   });
 });

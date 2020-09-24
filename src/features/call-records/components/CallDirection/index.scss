@@ -1,0 +1,24 @@
+@import 'assets/styles/variables';
+
+.call-direction {
+  display: flex;
+  margin-top: 20px;
+  // justify-content: space-around;
+}
+
+.call-direction__input {
+  display: none;
+}
+
+.call-direction__label {
+  width: 33%;
+  font-size: 13px;
+  text-align: center;
+  color: $color-blue-darkest;
+  padding: 5px;
+  border-radius: $base-border-radius;
+}
+
+.call-direction__input:checked + .call-direction__label {
+  background: $color-blue-lightest;
+}

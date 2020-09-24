@@ -2,7 +2,7 @@ import {
   ICallRecord,
   IDateInterval,
   CallRecordsSortingTypes,
-  CallDirectionTypes,
+  CallDirectionFilters,
 } from 'features/call-records/types';
 import { ICallRecordAction } from './actions';
 import { CallRecordsEvents } from './events';
@@ -12,7 +12,7 @@ interface ICallRecordsState {
   searchQuery: string;
   sorting: CallRecordsSortingTypes;
   dateInterval: IDateInterval;
-  direction: CallDirectionTypes;
+  direction: CallDirectionFilters;
   isLoading: boolean;
   isFailed: boolean;
 }
@@ -22,7 +22,7 @@ const initialState: ICallRecordsState = {
   searchQuery: '',
   sorting: CallRecordsSortingTypes.DATE_ACS,
   dateInterval: {},
-  direction: CallDirectionTypes.ALL,
+  direction: CallDirectionFilters.ALL,
   isLoading: false,
   isFailed: false,
 };
@@ -41,12 +41,28 @@ export function reducer(
         isLoading: false,
         isFailed: false,
       };
-    case CallRecordsEvents.REQUEST_RECORDS_FAILED:
+    case CallRecordsEvents.REQUEST_RECORDS_FAIL:
       return { ...state, isFailed: true, isLoading: false };
-    case CallRecordsEvents.DELETE_RECORD:
+    case CallRecordsEvents.DELETE_RECORD_REQUEST:
+      return {
+        ...state,
+        records: state.records.map(val =>
+          val.id === action.payload ? { ...val, isDeleting: true } : val
+        ),
+      };
+    case CallRecordsEvents.DELETE_RECORD_SUCCESS:
       return {
         ...state,
         records: state.records.filter(({ id }) => id !== action.payload),
+      };
+    case CallRecordsEvents.DELETE_RECORD_FAIL:
+      return {
+        ...state,
+        records: state.records.map(val =>
+          val.id === action.payload
+            ? { ...val, isDeleting: false, isFailed: true }
+            : val
+        ),
       };
     case CallRecordsEvents.SET_SEARCH_QUERY:
       return { ...state, searchQuery: action.payload };

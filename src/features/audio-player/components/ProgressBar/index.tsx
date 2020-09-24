@@ -93,7 +93,7 @@ const ProgressBar = ({
       <div
         style={{
           height: '2px',
-          background: 'gray',
+          background: '#7e94e5',
           flex: '1',
           position: 'relative',
         }}
@@ -105,7 +105,7 @@ const ProgressBar = ({
             left: `${progressPercent}%`,
             width: 8,
             height: 8,
-            background: '#f50',
+            background: 'white',
             borderRadius: '50%',
             transform: 'translateY(-50%) translateX(-50%)',
           }}
@@ -114,7 +114,7 @@ const ProgressBar = ({
           style={{
             height: '100%',
             width: `${progressPercent}%`,
-            background: '#f50',
+            background: 'white',
           }}
           data-test-id="progress-bar/progress-line"
         ></div>
@@ -155,7 +155,7 @@ const ProgressBar = ({
             left: '50%',
             width: 8,
             height: 8,
-            background: '#f50',
+            background: 'white',
             borderRadius: '50%',
             transform: 'translateY(50%) translateX(-50%)',
           }}
@@ -166,7 +166,7 @@ const ProgressBar = ({
             height: `${progressPercent}%`,
             position: 'absolute',
             bottom: '0',
-            background: '#f50',
+            background: 'white',
           }}
           data-test-id="progress-bar/progress-line"
         ></div>

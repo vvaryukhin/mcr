@@ -19,8 +19,8 @@ const DateSorting = ({ value, onChange }: IDateSortingProps) => {
 
   return (
     <DateSortingView
-      to={timestampToDateString(value.to)}
-      from={timestampToDateString(value.from)}
+      to={timestampToDateString({ timestamp: value.to })}
+      from={timestampToDateString({ timestamp: value.from })}
       onToChange={onToChange}
       onFromChange={onFromChange}
     />
