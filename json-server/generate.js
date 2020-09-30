@@ -1,0 +1,51 @@
+const faker = require('faker');
+
+let _id = 0;
+
+const uid = () => _id++;
+
+const getDirection = () => (Math.random() >= 0.5 ? 'incoming' : 'outcoming');
+
+const ONE_MINUTE_IN_MS = 60_000;
+
+function makeGetDate() {
+  let date = new Date('08/31/2020').getTime();
+  return function getDate() {
+    date += ONE_MINUTE_IN_MS;
+    return date;
+  };
+}
+
+const getDate = makeGetDate();
+
+module.exports = () => ({
+  records: Array(10)
+    .fill()
+    .map(() => ({
+      id: uid(),
+      direction: getDirection(),
+      collocutor: {
+        firstName: faker.name.firstName(),
+        middleName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        phone: faker.phone.phoneNumber(),
+      },
+      record: {
+        id: uid(),
+        duration: faker.random.number(60 * 120),
+        file:
+          Math.random() >= 0.5
+            ? 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3'
+            : 'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg',
+        transcriptions: Array(faker.random.number(10))
+          .fill()
+          .map(() => ({
+            id: uid(),
+            text: faker.random.words(),
+            createdAt: getDate(),
+            direction: getDirection(),
+          })),
+      },
+      createdAt: faker.date.recent().getTime(),
+    })),
+});

@@ -1,6 +1,10 @@
 import React from 'react';
 import { ICallRecord } from 'features/call-records/types';
 import { Link } from 'react-router-dom';
+import { secondsToHHMMSS } from 'utils';
+import { timestampToDateString } from 'features/call-records/utils';
+
+import MenuIcon from 'assets/images/menu.svg';
 
 export interface ICallRecordsListProps {
   records?: ICallRecord[];
@@ -43,6 +47,9 @@ const CallRecordsList = ({
               onClick={() => setPlayingRecord(call)}
               key={call.id}
               style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
                 background: '#eee',
                 padding: '10px',
                 fontSize: '12px',
@@ -50,22 +57,44 @@ const CallRecordsList = ({
               }}
               data-test-id="call-records-list/item"
             >
-              <div style={{ padding: 5 }}>
-                Имя собеседника – {call.collocutor.firstName}
-              </div>
-              <div style={{ padding: 5 }}>
-                Телефон собеседника – {call.collocutor.phone}
-              </div>
-              <div style={{ padding: 5 }}>
-                Длительность разговора – {call.record.duration}
-              </div>
-              <div style={{ padding: 5 }}>
-                <Link onClick={e => e.stopPropagation()} to={'/records/' + call.id}>
-                  Подробнее
-                </Link>
-              </div>
-
               <div>
+                <div style={{ padding: 5 }}>
+                  {call.collocutor.firstName}&nbsp;{call.collocutor.phone}
+                </div>
+                <div
+                  style={{
+                    padding: 5,
+                  }}
+                >
+                  <span style={{ marginRight: '20px' }}>
+                    {timestampToDateString(call.createdAt)}
+                  </span>
+                  {secondsToHHMMSS(call.record.duration)}
+                </div>
+              </div>
+              <div>
+                <button
+                  onClick={e => e.stopPropagation()}
+                  style={{ border: 'none' }}
+                  type="button"
+                >
+                  <img
+                    style={{ width: '16px', height: '16px' }}
+                    src={MenuIcon}
+                    alt="menu"
+                  />
+                </button>
+              </div>
+              <div style={{ display: 'none' }}>
+                <div style={{ padding: 5 }}>
+                  <Link
+                    onClick={e => e.stopPropagation()}
+                    to={'/records/' + call.id}
+                  >
+                    Подробнее
+                  </Link>
+                </div>
+
                 <button
                   onClick={e => {
                     e.stopPropagation();
