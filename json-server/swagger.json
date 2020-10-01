@@ -1,0 +1,308 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "0.1.0",
+    "title": "Call records app",
+    "description": "An app that allows you to listen to your call record"
+  },
+  "paths": {
+    "/api/v1/records": {
+      "get": {
+        "description": "get call records",
+        "responses": {
+          "200": {
+            "description": "request succeeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/callRecords"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "description": "query to search by",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "required": false,
+            "description": "call record id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "description": "filters records from this date",
+            "schema": {
+              "$ref": "#/components/schemas/timestamp"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "description": "filters records to this date",
+            "schema": {
+              "$ref": "#/components/schemas/timestamp"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sporting",
+            "required": false,
+            "description": "sorting type",
+            "schema": {
+              "$ref": "#/components/schemas/callRecordSorting"
+            }
+          },
+          {
+            "in": "query",
+            "name": "direction",
+            "required": false,
+            "description": "filters call records by direction",
+            "schema": {
+              "$ref": "#/components/schemas/callDirection"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/records/{recordId}": {
+      "get": {
+        "description": "get call record by id",
+        "responses": {
+          "200": {
+            "description": "request succeeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/callRecord"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "forbidden resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "delete call record by id",
+        "responses": {
+          "200": {
+            "description": "record is successfully deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/callRecord"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "forbidden resource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "error": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Error type",
+            "example": "NotFound"
+          },
+          "status": {
+            "type": "integer",
+            "description": "error status code",
+            "example": 404
+          },
+          "message": {
+            "type": "string",
+            "description": "error message",
+            "example": "resource with id 5 is not found"
+          }
+        }
+      },
+      "callRecords": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/callRecord"
+        }
+      },
+      "callRecord": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/callDirection"
+          },
+          "collocutor": {
+            "$ref": "#/components/schemas/collocutor"
+          },
+          "record": {
+            "$ref": "#/components/schemas/record"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/timestamp"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/timestamp",
+            "nullable": true
+          }
+        }
+      },
+      "record": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "file": {
+            "type": "string",
+            "example": "http://someurl/somefile.mp3"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "duration of a record in milliseconds"
+          },
+          "transcriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/transcription"
+            }
+          }
+        }
+      },
+      "transcription": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/id"
+          },
+          "text": {
+            "type": "string"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/timestamp"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/callDirection"
+          }
+        }
+      },
+      "collocutor": {
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        }
+      },
+      "callDirection": {
+        "type": "string",
+        "enum": ["INCOMING", "OUTCOMING", "ALL"]
+      },
+      "callRecordSorting": {
+        "type": "string",
+        "enum": [
+          "DATE_ASC",
+          "DATE_DES",
+          "DURATION_ACS",
+          "DURATION_DES",
+          "NAME_ALPHABET_ACS"
+        ]
+      },
+      "id": {
+        "type": "integer",
+        "example": 12,
+        "description": "uniq record id"
+      },
+      "timestamp": {
+        "type": "integer",
+        "example": 1601551885641,
+        "description": "Unix timestamp"
+      }
+    }
+  }
+}
