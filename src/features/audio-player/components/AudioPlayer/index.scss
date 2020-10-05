@@ -4,7 +4,7 @@ $player-max-height: 80%;
 
 /* stylelint-disable property-no-unknown */
 :export {
-  player_max_height: $player-max-height;
+  PLAYER_MAX_HEIGHT: $player-max-height;
 }
 /* stylelint-enable */
 
