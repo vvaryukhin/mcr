@@ -3,7 +3,7 @@ import { ICallRecord } from 'features/call-records/types';
 import Modal from 'components/Modal';
 import Loader from 'components/Loader';
 import ShortRecordInfo from '../ShortRecordInfo';
-import { isNumber, classNames, secondsToHHMMSS } from 'utils';
+import { classNames, secondsToHHMMSS } from 'utils';
 
 import { ReactComponent as MenuIcon } from 'assets/images/menu.svg';
 import { ReactComponent as SoundWavesIcon } from 'assets/images/sound-waves.svg';
@@ -26,7 +26,7 @@ const CallRecordsList = ({
   isLoading,
   isFailed,
 }: ICallRecordsListProps) => {
-  const [openedMenuId, setOpenedMenuId] = useState<number>();
+  const [openedMenuRecord, setOpenedMenuRecord] = useState<ICallRecord>();
 
   return (
     <ul className="records-list">
@@ -38,17 +38,44 @@ const CallRecordsList = ({
       ) : (
         <>
           <Modal
-            isOpened={isNumber(openedMenuId)}
-            onClose={() => setOpenedMenuId(undefined)}
+            isOpened={!!openedMenuRecord}
+            onClose={() => setOpenedMenuRecord(undefined)}
           >
-            <div className="records-list__delete-item-modal">
+            <div className="records-list__modal">
+              {openedMenuRecord && (
+                <>
+                  <button
+                    className="records-list__modal-button"
+                    onClick={e => {
+                      e.stopPropagation();
+                      download(openedMenuRecord.record.file);
+                    }}
+                    data-test-id="call-records-list/item/delete"
+                  >
+                    Download
+                  </button>
+                  <button
+                    className="records-list__modal-button"
+                    onClick={e => {
+                      e.stopPropagation();
+                      downloadData(
+                        JSON.stringify(openedMenuRecord.record.transcriptions),
+                        'application/json'
+                      );
+                    }}
+                    data-test-id="call-records-list/item/delete"
+                  >
+                    Download Only Text
+                  </button>
+                </>
+              )}
               <button
-                className="records-list__delete-item-button"
+                className="records-list__modal-button records-list__modal-button--delete"
                 onClick={e => {
                   e.stopPropagation();
-                  if (isNumber(openedMenuId)) {
-                    deleteRecord(openedMenuId);
-                    setOpenedMenuId(undefined);
+                  if (openedMenuRecord) {
+                    deleteRecord(openedMenuRecord.id);
+                    setOpenedMenuRecord(undefined);
                   }
                 }}
                 data-test-id="call-records-list/item/delete"
@@ -63,7 +90,7 @@ const CallRecordsList = ({
                 key={call.id}
                 call={call}
                 active={!!playingRecord && playingRecord.id === call.id}
-                setOpenedMenu={setOpenedMenuId}
+                setOpenedMenu={setOpenedMenuRecord}
                 setPlayingRecord={setPlayingRecord}
                 deleteRecord={deleteRecord}
               />
@@ -78,7 +105,7 @@ const CallRecordsList = ({
 interface ICallRecordsListItemProps {
   call: ICallRecord;
   active: boolean;
-  setOpenedMenu: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setOpenedMenu: React.Dispatch<React.SetStateAction<ICallRecord | undefined>>;
   setPlayingRecord: (record: ICallRecord) => void;
   deleteRecord: (id: number) => void;
 }
@@ -123,7 +150,7 @@ const CallRecordsListItem = ({
             <button
               onClick={e => {
                 e.stopPropagation();
-                setOpenedMenu(call.id);
+                setOpenedMenu(call);
               }}
               className="records-list__item-menu-button records-list__item-menu-button--sound-waves"
               type="button"
@@ -140,7 +167,7 @@ const CallRecordsListItem = ({
           <button
             onClick={e => {
               e.stopPropagation();
-              setOpenedMenu(call.id);
+              setOpenedMenu(call);
             }}
             className="records-list__item-menu-button"
             type="button"
@@ -152,5 +179,19 @@ const CallRecordsListItem = ({
     </li>
   );
 };
+
+function download(url: string, fileName?: string) {
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName || 'file';
+  link.click();
+}
+
+function downloadData(data: string, mimeType: string) {
+  const blob = new Blob([data], { type: mimeType });
+  const url = window.URL.createObjectURL(blob);
+  console.log(url);
+  download(url);
+}
 
 export default CallRecordsList;

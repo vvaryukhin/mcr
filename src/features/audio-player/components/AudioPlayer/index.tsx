@@ -38,7 +38,7 @@ const PLAYBACK_SPEEDS_SELECT_OPTIONS = PLAYBACK_SPEEDS.map(v => ({
   value: v,
 }));
 
-const EXPAND_PLAYER_THRESHOLD = 80;
+const EXPAND_PLAYER_THRESHOLD = 60;
 
 function performTransition(
   el: HTMLElement,

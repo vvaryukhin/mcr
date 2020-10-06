@@ -4,7 +4,7 @@ $player-max-height: 80%;
 
 /* stylelint-disable property-no-unknown */
 :export {
-  PLAYER_MAX_HEIGHT: $player-max-height;
+  player_max_height: $player-max-height;
 }
 /* stylelint-enable */
 
@@ -27,7 +27,7 @@ $player-max-height: 80%;
   right: 0;
   background: $color-blue;
   color: $color-white;
-  padding: 20px 15px 15px 15px;
+  padding: 5px 15px 15px 15px;
   font-size: 13px;
   max-height: $player-max-height;
   overflow-y: auto;
@@ -37,7 +37,8 @@ $player-max-height: 80%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 8px;
+  padding: 15px 0 5px;
+  margin-bottom: 3px;
   touch-action: none;
 }
 
