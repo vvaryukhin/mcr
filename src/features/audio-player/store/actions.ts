@@ -4,7 +4,7 @@ import { ICallRecord } from 'features/call-records/types';
 
 export const setPlayingRecord = makeAction<
   AudioPlayerEvents.SET_PLAYING_RECORD,
-  ICallRecord
+  ICallRecord | null
 >(AudioPlayerEvents.SET_PLAYING_RECORD);
 
 const actions = {

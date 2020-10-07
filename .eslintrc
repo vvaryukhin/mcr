@@ -27,7 +27,8 @@
   "rules": {
     "prettier/prettier": "error",
     "react/prop-types": 1,
-    "@typescript-eslint/explicit-module-boundary-types": ["off"]
+    "@typescript-eslint/explicit-module-boundary-types": ["off"],
+    "prefer-spread": "off"
   },
   "overrides": [
     {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const express = require('express');
 const cors = require('cors');
 const fakeRecords = require('./generate');
@@ -13,8 +14,7 @@ app.get('/records', (req, res) => {
   console.log({ from, to, sorting, q, direction });
   let result = records;
   if (direction && direction !== 'ALL') {
-    const lcDirection = direction.toLocaleLowerCase();
-    result = result.filter(({ direction: d }) => d === lcDirection);
+    result = result.filter(({ direction: d }) => d === direction);
   }
   if (q) {
     result = result.filter(

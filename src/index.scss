@@ -1,3 +1,5 @@
+@import 'assets/styles/typography';
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -7,29 +9,19 @@
 html,
 body {
   height: 100%;
+  color: $color-gray;
 }
 
 body {
-  padding: 1rem 2rem;
+  padding: 1rem;
   margin: 0;
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    'Roboto',
-    'Oxygen',
-    'Ubuntu',
-    'Cantarell',
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
+  font-family: 'Nunito', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: none;
   -webkit-tap-highlight-color: transparent;
-  font-size: 16px;
+  font-size: 13px;
 }
 
 a,
@@ -38,25 +30,42 @@ label {
   -webkit-tap-highlight-color: transparent;
 }
 
-input[type='text'],
-input[type='submit'],
-textarea {
+input,
+textarea,
+select {
   -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  outline: 0;
 }
 
+input::-webkit-calendar-picker-indicator,
+input::-webkit-inner-spin-button {
+  display: none;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+input,
+select,
 button {
+  background: transparent;
+  border: none;
+
   &:focus {
     outline: none;
   }
 }
 
-ul {
-  padding: 0;
-  margin: 0;
-}
-
 ul > li {
   list-style: none;
-  padding: 0;
-  margin: 0.5rem 0;
+}
+
+@media screen and (min-width: 360px) {
+  body {
+    padding: 1rem 2rem;
+  }
 }

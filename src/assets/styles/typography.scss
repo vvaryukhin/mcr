@@ -1,0 +1,9 @@
+@import './variables.scss';
+
+.heading {
+  color: $heading-color;
+
+  &--light {
+    color: $color-white;
+  }
+}

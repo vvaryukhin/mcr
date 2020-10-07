@@ -1,10 +1,12 @@
 export interface ICallRecord {
   id: number;
-  direction: IDirection;
+  direction: CallDirections;
   collocutor: ICollocutor;
   record: IRecord;
   createdAt: number;
   deletedAt: number | null;
+  isDeleting: boolean;
+  isFailed: boolean;
 }
 
 export interface ICollocutor {
@@ -25,10 +27,13 @@ export interface ITranscription {
   id: number;
   text: string;
   createdAt: number;
-  direction: IDirection;
+  direction: CallDirections;
 }
 
-export type IDirection = 'incoming' | 'outcoming';
+export enum CallDirections {
+  INCOMING = 'INCOMING',
+  OUTCOMING = 'OUTCOMING',
+}
 
 export enum CallRecordsSortingTypes {
   DATE_ACS = 'DATE_ACS',
@@ -38,7 +43,7 @@ export enum CallRecordsSortingTypes {
   NAME_ALPHABET_ACS = 'NAME_ALPHABET_ACS',
 }
 
-export enum CallDirectionTypes {
+export enum CallDirectionFilters {
   ALL = 'ALL',
   INCOMING = 'INCOMING',
   OUTCOMING = 'OUTCOMING',

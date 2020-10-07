@@ -1,33 +1,55 @@
 import React from 'react';
-import Select from 'components/Select';
-import { CallDirectionTypes } from 'features/call-records/types';
+// import Select from 'components/Select';
+import { CallDirectionFilters } from 'features/call-records/types';
+
+import './index.scss';
 
 const callTypeSelectOptions = [
   {
     title: 'все',
-    value: CallDirectionTypes.ALL,
+    value: CallDirectionFilters.ALL,
   },
   {
     title: 'входящие',
-    value: CallDirectionTypes.INCOMING,
+    value: CallDirectionFilters.INCOMING,
   },
   {
     title: 'исходящие',
-    value: CallDirectionTypes.OUTCOMING,
+    value: CallDirectionFilters.OUTCOMING,
   },
 ];
 
 interface ICallTypeSelectProps {
-  direction: CallDirectionTypes;
-  setCallDirection: (value: CallDirectionTypes) => void;
+  direction: CallDirectionFilters;
+  setCallDirection: (value: CallDirectionFilters) => void;
 }
 
 const CallTypeSelect = ({ direction, setCallDirection }: ICallTypeSelectProps) => {
-  const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCallDirection(e.target.value as CallDirectionTypes);
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setCallDirection(value as CallDirectionFilters);
   };
   return (
-    <Select value={direction} options={callTypeSelectOptions} onChange={onChange} />
+    <div className="call-direction">
+      {callTypeSelectOptions.map(({ title, value }, key) => {
+        return (
+          <React.Fragment key={key}>
+            <input
+              className="call-direction__input"
+              onChange={onChange}
+              type="radio"
+              id={key.toString()}
+              value={value}
+              checked={direction === value}
+              name="call-direction"
+            />
+            <label className="call-direction__label" htmlFor={key.toString()}>
+              {title}
+            </label>
+          </React.Fragment>
+        );
+      })}
+    </div>
   );
 };
 

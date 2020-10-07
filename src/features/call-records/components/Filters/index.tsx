@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import Modal from 'components/Modal';
+import Button from 'components/Button';
 import OrderSorting from 'features/call-records/components/OrderSorting';
 import DateSorting from 'features/call-records/components/DateSorting';
 import { CallRecordsSortingTypes, IDateInterval } from 'features/call-records/types';
 import { connect } from 'react-redux';
 import { IAppState } from 'store';
 import { setDateInterval, setSorting } from 'features/call-records/store';
+
+import { ReactComponent as FiltersIcon } from 'assets/images/filters.svg';
+import './index.scss';
 
 interface IFiltersProps {
   sorting: CallRecordsSortingTypes;
@@ -42,29 +46,22 @@ const Filters = ({
   return (
     <>
       <Modal isOpened={showModal} onClose={closeModal}>
-        <form onSubmit={onSubmit}>
+        <form
+          onSubmit={onSubmit}
+          style={{
+            textAlign: 'center',
+          }}
+        >
           <DateSorting value={interval} onChange={setInterval} />
           <OrderSorting
             selectedSorting={orderSorting}
             setSorting={setOrderSorting}
           />
-          <button style={{ marginTop: '20px' }}>Применить</button>
+          <Button style={{ marginTop: '20px' }}>Применить</Button>
         </form>
       </Modal>
-      <button
-        style={{
-          background: 'blue',
-          color: 'white',
-          margin: '20px auto',
-          padding: '5px 20px',
-          border: 'none',
-          borderRadius: '15px',
-          fontWeight: 'bold',
-        }}
-        onClick={openModal}
-        type="button"
-      >
-        Filters
+      <button onClick={openModal} type="button">
+        <FiltersIcon className="filter__icon" />
       </button>
     </>
   );

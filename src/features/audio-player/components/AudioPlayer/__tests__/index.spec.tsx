@@ -14,13 +14,12 @@ describe('BottomControls', () => {
     const record = null;
 
     const { rerender } = render(<AudioPlayer playingRecord={record} />);
-    const player = screen.getByTestId('audio-player');
 
-    expect(player).toHaveStyle({ display: 'none' });
+    expect(screen.queryByTestId('audio-player')).not.toBeInTheDocument();
 
     rerender(<AudioPlayer playingRecord={fakeRecords[0]} />);
 
-    expect(player).not.toHaveStyle({ display: 'none' });
+    expect(screen.queryByTestId('audio-player')).toBeInTheDocument();
   });
 
   it('should show/hide play and pause buttons', () => {

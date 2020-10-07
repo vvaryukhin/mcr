@@ -1,3 +1,4 @@
+import { off } from 'utils';
 import { AnyFunction } from 'types';
 
 export default function transitionEnd(
@@ -5,7 +6,7 @@ export default function transitionEnd(
   cb: AnyFunction,
   { useBubble = false } = {}
 ) {
-  const remove = () => el.removeEventListener('transitionend', onEnd);
+  const remove = () => off(el, 'transitionend', onEnd as EventListener);
   const onEnd = (e: TransitionEvent) => {
     if (!useBubble && e.target !== el) return;
     cb(e);

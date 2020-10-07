@@ -53,7 +53,7 @@ describe('CallRecordsList', () => {
     expect(props.setPlayingRecord).toBeCalledWith(testRecord);
   });
 
-  it('should call deleteRecord when user clicks on deleteButton', () => {
+  /* it('should call deleteRecord when user clicks on deleteButton', () => {
     const testRecord = fakeRecords[0];
     const props = {
       records: [testRecord],
@@ -68,5 +68,5 @@ describe('CallRecordsList', () => {
     expect(props.deleteRecord).toBeCalledTimes(1);
     expect(props.deleteRecord).toBeCalledWith(testRecord.id);
     expect(props.setPlayingRecord).not.toBeCalled();
-  });
+  }); */
 });

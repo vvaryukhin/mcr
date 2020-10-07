@@ -1,5 +1,8 @@
 import React from 'react';
 
+import { ReactComponent as SearchIcon } from 'assets/images/search.svg';
+import './index.scss';
+
 interface ISearchProps {
   query: string;
   setSearchQuery: (value: string) => void;
@@ -7,17 +10,13 @@ interface ISearchProps {
 
 const Search = ({ setSearchQuery }: ISearchProps) => {
   return (
-    <div style={{ margin: '20px 0' }}>
+    <div className="search">
+      <SearchIcon className="search__icon" />
       <input
+        className="search__input"
         type="text"
         onChange={e => setSearchQuery(e.target.value)}
-        style={{
-          boxSizing: 'border-box',
-          padding: 5,
-          border: '1px solid #888',
-          width: '100%',
-          height: '100%',
-        }}
+        placeholder="Search"
       />
     </div>
   );

@@ -3,7 +3,8 @@ import { Route, Switch, Link, useLocation } from 'react-router-dom';
 import Main from './pages/Main';
 import Records from './pages/Records';
 import ErrorPage from 'pages/Error';
-import AudioPlayer from 'features/audio-player/components/BottomControls';
+import AudioPlayer from 'features/audio-player/components/AudioPlayer';
+import Notifications from 'components/Notification';
 
 import './App.scss';
 
@@ -11,8 +12,6 @@ function App() {
   const { pathname } = useLocation();
   return (
     <div className="App">
-      <h1>MCR</h1>
-
       <nav>
         <ul>
           {pathname !== '/' && (
@@ -30,6 +29,7 @@ function App() {
       </Switch>
 
       <AudioPlayer />
+      <Notifications />
     </div>
   );
 }

@@ -4,15 +4,12 @@ import {
   ICallRecord,
   CallRecordsSortingTypes,
   IDateInterval,
-  CallDirectionTypes,
+  CallDirectionFilters,
 } from '../types';
 import { Dispatch } from 'redux';
 import CallRecordsService from '../services';
 import { error } from 'utils';
-
-export const deleteRecord = makeAction<CallRecordsEvents.DELETE_RECORD, number>(
-  CallRecordsEvents.DELETE_RECORD
-);
+import { notify } from 'components/Notification';
 
 export const setSearchQuery = makeAction<CallRecordsEvents.SET_SEARCH_QUERY, string>(
   CallRecordsEvents.SET_SEARCH_QUERY
@@ -30,7 +27,7 @@ export const setDateInterval = makeAction<
 
 export const setCallDirection = makeAction<
   CallRecordsEvents.SET_CALL_DIRECTION,
-  CallDirectionTypes
+  CallDirectionFilters
 >(CallRecordsEvents.SET_CALL_DIRECTION);
 
 export const requestRecords = makeAction(CallRecordsEvents.REQUEST_RECORDS);
@@ -40,8 +37,20 @@ export const requestRecordsSuccess = makeAction<
   ICallRecord[]
 >(CallRecordsEvents.REQUEST_RECORDS_SUCCESS);
 
-export const requestRecordsFailed = makeAction(
-  CallRecordsEvents.REQUEST_RECORDS_FAILED
+export const requestRecordsFail = makeAction(CallRecordsEvents.REQUEST_RECORDS_FAIL);
+
+const deleteRecordRequest = makeAction<
+  CallRecordsEvents.DELETE_RECORD_REQUEST,
+  number
+>(CallRecordsEvents.DELETE_RECORD_REQUEST);
+
+const deleteRecordSuccess = makeAction<
+  CallRecordsEvents.DELETE_RECORD_SUCCESS,
+  number
+>(CallRecordsEvents.DELETE_RECORD_SUCCESS);
+
+const deleteRecordFail = makeAction<CallRecordsEvents.DELETE_RECORD_FAIL, number>(
+  CallRecordsEvents.DELETE_RECORD_FAIL
 );
 
 // async actions
@@ -49,7 +58,7 @@ export interface IFetchRecordsOptions {
   dateInterval: IDateInterval;
   sorting: CallRecordsSortingTypes;
   searchQuery: string;
-  direction: CallDirectionTypes;
+  direction: CallDirectionFilters;
 }
 
 export const fetchRecords = ({
@@ -70,27 +79,39 @@ export const fetchRecords = ({
     })
     .catch(err => {
       error(err);
-      dispatch(requestRecordsFailed());
+      dispatch(requestRecordsFail());
     });
 };
 
-export const deleteRecordRequest = (id: number) => (
+export const deleteRecord = (id: number) => (
   dispatch: Dispatch<ICallRecordAction>
 ) => {
+  dispatch(deleteRecordRequest(id));
   CallRecordsService.remove(id)
-    .then(() => dispatch(deleteRecord(id)))
-    .catch(console.error);
+    .then(() => dispatch(deleteRecordSuccess(id)))
+    .catch(e => {
+      dispatch(deleteRecordFail(id));
+      error(e);
+      notify({
+        title: 'Error occurred',
+        message:
+          'Failed to delete record, ' +
+          'check your internet connection and try again',
+      });
+    });
 };
 
 const actions = {
-  deleteRecord,
   setSearchQuery,
   setSorting,
   setDateInterval,
   setCallDirection,
   requestRecords,
   requestRecordsSuccess,
-  requestRecordsFailed,
+  requestRecordsFail,
+  deleteRecordRequest,
+  deleteRecordSuccess,
+  deleteRecordFail,
 };
 
 export type ICallRecordAction = IActionUnion<typeof actions>;

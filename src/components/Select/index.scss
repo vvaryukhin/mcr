@@ -1,0 +1,44 @@
+@import 'assets/styles/variables';
+
+.select {
+  position: relative;
+  display: flex;
+  border-radius: $base-border-radius;
+  border: 1px solid $color-gray-light;
+
+  &--light {
+    color: $color-white;
+
+    .select__select {
+      color: $color-white;
+    }
+  }
+
+  &--noBorder {
+    border: none;
+  }
+}
+
+/* Arrow */
+.select::after {
+  content: '\25BC';
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  color: $color-blue-darkest;
+  padding: 0 13px;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.select--noArrow::after {
+  display: none;
+}
+
+.select__select {
+  width: 100%;
+  padding: 10px;
+}

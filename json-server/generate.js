@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const faker = require('faker');
 
 let _id = 0;
 
 const uid = () => _id++;
 
-const getDirection = () => (Math.random() >= 0.5 ? 'incoming' : 'outcoming');
+const getDirection = () => (Math.random() >= 0.5 ? 'INCOMING' : 'OUTCOMING');
 
 const ONE_MINUTE_IN_MS = 60_000;
 
@@ -28,7 +29,7 @@ module.exports = () => ({
         firstName: faker.name.firstName(),
         middleName: faker.name.firstName(),
         lastName: faker.name.lastName(),
-        phone: faker.phone.phoneNumber(),
+        phone: faker.phone.phoneNumber('+7 ### ###-##-##'),
       },
       record: {
         id: uid(),
@@ -37,7 +38,7 @@ module.exports = () => ({
           Math.random() >= 0.5
             ? 'https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3'
             : 'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg',
-        transcriptions: Array(faker.random.number(10))
+        transcriptions: Array(faker.random.number(30))
           .fill()
           .map(() => ({
             id: uid(),
