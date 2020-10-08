@@ -8,6 +8,7 @@ import {
 } from '../types';
 import { Dispatch } from 'redux';
 import CallRecordsService from '../services';
+import { history } from 'router';
 import { error } from 'utils';
 import { notify } from 'components/Notification';
 
@@ -78,6 +79,13 @@ export const fetchRecords = ({
       dispatch(requestRecordsSuccess(res));
     })
     .catch(err => {
+      if (err.status === 401 || err.status === 403) {
+        notify({
+          title: 'Authorization error',
+          message: 'Log in to see your records',
+        });
+        return history.push('/login');
+      }
       error(err);
       dispatch(requestRecordsFail());
     });

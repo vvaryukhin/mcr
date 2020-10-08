@@ -1,5 +1,5 @@
 import React from 'react';
-// import Select from 'components/Select';
+import Variant from 'components/Variant';
 import { CallDirectionFilters } from 'features/call-records/types';
 
 import './index.scss';
@@ -25,31 +25,13 @@ interface ICallTypeSelectProps {
 }
 
 const CallTypeSelect = ({ direction, setCallDirection }: ICallTypeSelectProps) => {
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setCallDirection(value as CallDirectionFilters);
-  };
   return (
-    <div className="call-direction">
-      {callTypeSelectOptions.map(({ title, value }, key) => {
-        return (
-          <React.Fragment key={key}>
-            <input
-              className="call-direction__input"
-              onChange={onChange}
-              type="radio"
-              id={key.toString()}
-              value={value}
-              checked={direction === value}
-              name="call-direction"
-            />
-            <label className="call-direction__label" htmlFor={key.toString()}>
-              {title}
-            </label>
-          </React.Fragment>
-        );
-      })}
-    </div>
+    <Variant
+      selectedValue={direction}
+      onChange={value => setCallDirection(value as CallDirectionFilters)}
+      variants={callTypeSelectOptions}
+      name="call-direction"
+    />
   );
 };
 

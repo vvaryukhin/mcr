@@ -4,10 +4,16 @@ import CallRecordsSearch from 'features/call-records/components/Search';
 import CallDirectionSelect from 'features/call-records/components/CallDirection';
 import Filters from 'features/call-records/components/Filters';
 
-function Main() {
+const Main = () => {
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: 20,
+        }}
+      >
         <h2 className="heading">Ваши звонки</h2>
         <Filters />
       </div>
@@ -16,6 +22,6 @@ function Main() {
       <CallRecordsList />
     </div>
   );
-}
+};
 
 export default Main;

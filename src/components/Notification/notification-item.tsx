@@ -23,8 +23,7 @@ const NotificationItem = ({
         removeClass(node, 'notification--inserting');
       });
     }
-  });
-  // const notificationRef = useRef<HTMLDivElement>(null);
+  }, []);
 
   const remove = useCallback(
     (direction: 'left' | 'right' = 'right') => {
