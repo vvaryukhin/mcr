@@ -1,24 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Input from 'components/Input';
 
 import { ReactComponent as SearchIcon } from 'assets/images/search.svg';
-import './index.scss';
 
 interface ISearchProps {
   query: string;
   setSearchQuery: (value: string) => void;
 }
 
-const Search = ({ setSearchQuery }: ISearchProps) => {
+const Search = ({ query, setSearchQuery }: ISearchProps) => {
+  const [value, setValue] = useState(query);
+
   return (
-    <div className="search">
-      <SearchIcon className="search__icon" />
-      <input
-        className="search__input"
-        type="text"
-        onChange={e => setSearchQuery(e.target.value)}
-        placeholder="Search"
-      />
-    </div>
+    <Input
+      value={value}
+      onChange={e => {
+        const { value: newValue } = e.target;
+        setValue(newValue);
+        setSearchQuery(newValue);
+      }}
+      leftIcon={SearchIcon}
+      placeholder="Search"
+    />
   );
 };
 

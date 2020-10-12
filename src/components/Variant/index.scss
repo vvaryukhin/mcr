@@ -1,0 +1,22 @@
+@import 'assets/styles/variables';
+
+.variant {
+  display: flex;
+}
+
+.variant__input {
+  display: none;
+}
+
+.variant__label {
+  flex: 1;
+  color: $color-blue-darkest;
+  text-align: center;
+  font-size: 13px;
+  padding: 5px;
+  border-radius: $base-border-radius;
+}
+
+.variant__input:checked + .variant__label {
+  background: $color-blue-lightest;
+}

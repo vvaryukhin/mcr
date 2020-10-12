@@ -36,7 +36,6 @@ function CallRecords({
   isFailed,
 }: IProps) {
   useEffect(() => {
-    console.log('effect...');
     fetchRecords({
       dateInterval,
       sorting,

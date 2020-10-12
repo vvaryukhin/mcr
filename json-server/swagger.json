@@ -6,6 +6,19 @@
     "description": "An app that allows you to listen to your call record"
   },
   "paths": {
+    "/api/v1/login/password": {
+      "post": {
+        "description": "log in using phone number and password",
+        "responses": {
+          "200": {
+            "description": "user has been logged in successfully"
+          },
+          "400": {
+            "description": "user send an invalid credentials"
+          }
+        }
+      }
+    },
     "/api/v1/records": {
       "get": {
         "description": "get call records",

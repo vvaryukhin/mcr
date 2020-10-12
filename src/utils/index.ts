@@ -23,6 +23,9 @@ export { default as transitionEnd } from './transition-end';
 export { default as id } from './id';
 export { default as uniq } from './uniq';
 export { default as hasOwn } from './has-own';
+export { default as makeSet } from './make-set';
+
+export { default as request } from './request';
 
 export { default as mapRight } from './map-right';
 export * from './classes';

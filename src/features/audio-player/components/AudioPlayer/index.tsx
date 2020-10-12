@@ -91,7 +91,7 @@ export const AudioPlayer = ({ playingRecord }: IAudioPlayerProps) => {
       el.style.height = '';
       heightRef.current = { initial, max };
     }
-  });
+  }, []);
 
   const handlers = useMemo(() => {
     return makeSwipeHandlers({
@@ -249,13 +249,13 @@ export const AudioPlayer = ({ playingRecord }: IAudioPlayerProps) => {
   };
 
   return playingRecord ? (
-    <>
+    <div className="player" style={{ height: heightRef.current.initial }}>
       <div
-        className="player-overlay"
+        className="player__overlay"
         ref={overlayRef}
         onClick={() => setFullInfo(false)}
       ></div>
-      <div ref={rootRef} className="player" data-test-id="audio-player">
+      <div ref={rootRef} className="player__content" data-test-id="audio-player">
         <div {...handlers} className="player__drag">
           <MinusIcon className="player__drag-icon" />
         </div>
@@ -329,7 +329,7 @@ export const AudioPlayer = ({ playingRecord }: IAudioPlayerProps) => {
           <Transcription transcriptions={playingRecord.record.transcriptions} />
         )}
       </div>
-    </>
+    </div>
   ) : null;
 };
 

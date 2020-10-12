@@ -1,18 +1,18 @@
 import { useRef, useCallback } from 'react';
+import { isArray } from 'utils';
 
 export default function useCallbackRef<T extends Element>(
   cb: (node: T | null) => any,
-  deps: any[] = []
+  deps: any[]
 ) {
   const elRef = useRef<T | null>(null);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const memoizedCb = useCallback(cb, [...deps]);
   const cbRef = useCallback(
     (node: T | null) => {
       elRef.current = node;
-      memoizedCb(node);
+      cb(node);
     },
-    [memoizedCb]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    isArray(deps) ? [...deps] : []
   );
   return [elRef, cbRef] as const;
 }
