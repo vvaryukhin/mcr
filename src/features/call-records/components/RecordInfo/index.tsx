@@ -9,7 +9,7 @@ import { ReactComponent as ArrowDownLeft } from 'assets/images/arrow-down-left.s
 
 import './index.scss';
 
-interface IShortRecordInfo {
+interface IRecordInfo {
   record: ICallRecord;
   hasDuration?: boolean;
   theme?: RecordInfoTheme;
@@ -17,11 +17,11 @@ interface IShortRecordInfo {
 
 type RecordInfoTheme = 'default' | 'light' | 'error';
 
-const ShortRecordInfo = ({
+const RecordInfo = ({
   record,
   hasDuration = true,
   theme = 'default',
-}: IShortRecordInfo) => {
+}: IRecordInfo) => {
   return (
     <div
       className={`record-info ${classNames({
@@ -47,4 +47,4 @@ const ShortRecordInfo = ({
   );
 };
 
-export default ShortRecordInfo;
+export default RecordInfo;

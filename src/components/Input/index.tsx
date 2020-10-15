@@ -15,6 +15,7 @@ export interface IInputProps {
   placeholder?: string;
   leftIcon?: SVGIcon;
   rightIcon?: SVGIcon;
+  fullWidth?: boolean;
 }
 
 const Input = ({
@@ -25,6 +26,7 @@ const Input = ({
   placeholder,
   leftIcon,
   rightIcon,
+  fullWidth = false,
 }: IInputProps) => {
   const LeftIcon = leftIcon;
   const RightIcon = rightIcon;
@@ -34,6 +36,7 @@ const Input = ({
       className={`input ${classNames({
         'input--left-icon': !!LeftIcon,
         'input--right-icon': !!RightIcon,
+        'input--full-width': fullWidth,
       })}`}
     >
       {LeftIcon && <LeftIcon className="input__icon input__icon--left" />}

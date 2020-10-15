@@ -1,13 +1,13 @@
 @import 'assets/styles/variables';
 
-.records-list__modal {
+.bottom-menu {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   padding: 5px;
 }
 
-.records-list__modal-button {
+.bottom-menu__button {
   padding: 15px 0;
   border-bottom: 1px solid $color-gray-light;
 
@@ -15,7 +15,7 @@
     border: none;
   }
 
-  &--delete {
+  &--danger {
     color: $color-red;
   }
 }

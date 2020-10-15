@@ -1,10 +1,8 @@
 import React from 'react';
-import Modal from 'components/Modal';
+import BottomMenu from 'components/BottomMenu';
 import { deleteRecord } from 'features/call-records/store';
 import { ICallRecord } from 'features/call-records/types';
 import { connect } from 'react-redux';
-
-import './index.scss';
 
 interface IContextMenuProps {
   record?: ICallRecord;
@@ -13,13 +11,11 @@ interface IContextMenuProps {
 }
 
 const ContextMenu = ({ record, onClose, deleteRecord }: IContextMenuProps) => {
-  const downloadAudio = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const onDownloadAudio = () => {
     record && download(record.record.file);
   };
 
-  const downloadText = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const onDownloadText = () => {
     record &&
       downloadData(
         JSON.stringify(record.record.transcriptions, null, 2),
@@ -27,38 +23,20 @@ const ContextMenu = ({ record, onClose, deleteRecord }: IContextMenuProps) => {
       );
   };
 
+  const onDeleteRecord = () => {
+    record && deleteRecord(record.id);
+  };
+
   return (
-    <Modal isOpened={!!record} onClose={onClose}>
-      <div className="records-list__modal">
-        <button
-          className="records-list__modal-button"
-          onClick={downloadAudio}
-          data-test-id="call-records-list/item/delete"
-        >
-          Download
-        </button>
-        <button
-          className="records-list__modal-button"
-          onClick={downloadText}
-          data-test-id="call-records-list/item/delete"
-        >
-          Download Only Text
-        </button>
-        <button
-          className="records-list__modal-button records-list__modal-button--delete"
-          onClick={e => {
-            e.stopPropagation();
-            if (record) {
-              deleteRecord(record.id);
-              onClose();
-            }
-          }}
-          data-test-id="call-records-list/item/delete"
-        >
-          Delete
-        </button>
-      </div>
-    </Modal>
+    <BottomMenu
+      isOpened={!!record}
+      onClose={onClose}
+      items={[
+        { title: 'Download', onClick: onDownloadAudio },
+        { title: 'Download Text', onClick: onDownloadText },
+        { title: 'Delete', onClick: onDeleteRecord, theme: 'danger' },
+      ]}
+    />
   );
 };
 
@@ -76,4 +54,8 @@ function downloadData(data: string, mimeType: string) {
   download(url);
 }
 
-export default connect(null, { deleteRecord })(ContextMenu);
+const mapDispatchToProps = {
+  deleteRecord,
+};
+
+export default connect(null, mapDispatchToProps)(ContextMenu);

@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { ICallRecord } from 'features/call-records/types';
+import React, { useEffect } from 'react';
 import Loader from 'components/Loader';
 import Button from 'components/Button';
-import ContextMenu from '../ContextMenu';
-import ShortRecordInfo from '../ShortRecordInfo';
+import RecordInfo from '../RecordInfo';
 import { classNames, secondsToHHMMSS } from 'utils';
+import { ICallRecord } from 'features/call-records/types';
 import { IFetchRecordsOptions } from 'features/call-records/store';
 
 import { ReactComponent as MenuIcon } from 'assets/images/menu.svg';
@@ -16,6 +15,7 @@ interface ICallRecordsListProps extends IFetchRecordsOptions {
   records: ICallRecord[];
   playingRecord: ICallRecord | null;
   setPlayingRecord: (record: ICallRecord) => void;
+  setOpenedMenu: (record: ICallRecord | undefined) => void;
   fetchRecords: (options: IFetchRecordsOptions) => void;
   loadMoreRecords: () => void;
   hasMoreRecords: boolean;
@@ -29,6 +29,7 @@ const CallRecordsList = ({
   records,
   playingRecord,
   setPlayingRecord,
+  setOpenedMenu,
   fetchRecords,
   loadMoreRecords,
   hasMoreRecords,
@@ -41,15 +42,9 @@ const CallRecordsList = ({
   isLoadingMore,
   isLoadingMoreFailed,
 }: ICallRecordsListProps) => {
-  const [openedMenuRecord, setOpenedMenuRecord] = useState<ICallRecord>();
-
-  const fetchRecordsRequest = useCallback(() => {
+  useEffect(() => {
     fetchRecords({ dateInterval, sorting, searchQuery, direction });
   }, [fetchRecords, dateInterval, sorting, searchQuery, direction]);
-
-  useEffect(() => {
-    fetchRecordsRequest();
-  }, [fetchRecordsRequest]);
 
   return (
     <ul className="records-list">
@@ -60,17 +55,14 @@ const CallRecordsList = ({
         </div>
       ) : (
         <>
-          <ContextMenu
-            record={openedMenuRecord}
-            onClose={() => setOpenedMenuRecord(undefined)}
-          />
           {records.map(call => {
             return (
               <CallRecordsListItem
                 key={call.id}
                 call={call}
+                searchQuery={searchQuery}
                 active={!!playingRecord && playingRecord.id === call.id}
-                setOpenedMenu={setOpenedMenuRecord}
+                setOpenedMenu={setOpenedMenu}
                 setPlayingRecord={setPlayingRecord}
               />
             );
@@ -95,13 +87,15 @@ const CallRecordsList = ({
 interface ICallRecordsListItemProps {
   call: ICallRecord;
   active: boolean;
-  setOpenedMenu: React.Dispatch<React.SetStateAction<ICallRecord | undefined>>;
+  searchQuery: string;
+  setOpenedMenu: (record: ICallRecord | undefined) => void;
   setPlayingRecord: (record: ICallRecord) => void;
 }
 
 const CallRecordsListItem = ({
   call,
   active,
+  searchQuery,
   setOpenedMenu,
   setPlayingRecord,
 }: ICallRecordsListItemProps) => {
@@ -122,20 +116,17 @@ const CallRecordsListItem = ({
         'records-list__item--loading': call.isDeleting,
         'records-list__item--error': call.isFailed,
       })}`}
+      style={{ flexWrap: 'wrap' }}
       data-test-id="call-records-list/item"
     >
-      <ShortRecordInfo
+      <RecordInfo
         record={call}
         hasDuration={false}
         theme={call.isFailed ? 'error' : 'default'}
       />
       <div style={{ display: 'flex' }}>
         {active ? (
-          <div
-            style={{ marginRight: '15px' }}
-            className="records-list__item-menu"
-            data-role="records-list/item-menu"
-          >
+          <div style={{ marginRight: '15px' }} className="records-list__item-menu">
             <button
               onClick={e => {
                 e.stopPropagation();
@@ -152,7 +143,7 @@ const CallRecordsListItem = ({
             {secondsToHHMMSS(call.record.duration)}
           </span>
         )}
-        <div className="records-list__item-menu" data-role="records-list/item-menu">
+        <div className="records-list__item-menu">
           <button
             onClick={e => {
               e.stopPropagation();
@@ -165,8 +156,61 @@ const CallRecordsListItem = ({
           </button>
         </div>
       </div>
+      <div style={{ width: '100%' }}>
+        {getTextMatch(
+          call.record.transcriptions.map(({ text }) => text).join(' '),
+          searchQuery
+        )}
+      </div>
     </li>
   );
 };
+
+interface IHighlightProps {
+  text: string;
+  highlight: string;
+}
+
+const Highlight = ({ text, highlight }: IHighlightProps) => {
+  const lowerCaseHighlight = highlight.toLowerCase();
+  const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+  return (
+    <span>
+      {parts.map((part, key) =>
+        part.toLowerCase() === lowerCaseHighlight ? (
+          <b key={key}>{part}</b>
+        ) : (
+          <span key={key}>{part}</span>
+        )
+      )}
+    </span>
+  );
+};
+
+function getTextMatch(text: string, match: string) {
+  if (match.length < 2) return null;
+  const matchIdx = text.indexOf(match);
+  if (matchIdx > -1) {
+    const startIdx = Math.max(0, matchIdx - 10);
+    const endIdx = matchIdx + 10;
+    return Highlight({
+      text:
+        getDots(text, startIdx, true) +
+        text.slice(startIdx, endIdx) +
+        getDots(text, startIdx, false),
+      highlight: match,
+    });
+  }
+  return null;
+}
+
+function getDots(text: string, idx: number, before = true) {
+  const nearCharIdx = before ? idx - 1 : idx + 1;
+  if (text[nearCharIdx] === ' ') {
+    return '';
+  } else {
+    return '...';
+  }
+}
 
 export default CallRecordsList;
