@@ -1,16 +1,16 @@
 import { makeAction, IActionUnion } from 'store/utils';
 import { CallRecordsEvents } from './events';
 import {
-  ICallRecord,
   CallRecordsSortingTypes,
   IDateInterval,
   CallDirectionFilters,
 } from '../types';
 import { Dispatch } from 'redux';
-import CallRecordsService from '../services';
+import CallRecordsService, { IFindRecordsResult } from '../services';
 import { history } from 'router';
-import { error } from 'utils';
+import { error /* , request */ } from 'utils';
 import { notify } from 'components/Notification';
+import { IAppState } from 'store';
 
 export const setSearchQuery = makeAction<CallRecordsEvents.SET_SEARCH_QUERY, string>(
   CallRecordsEvents.SET_SEARCH_QUERY
@@ -35,7 +35,7 @@ export const requestRecords = makeAction(CallRecordsEvents.REQUEST_RECORDS);
 
 export const requestRecordsSuccess = makeAction<
   CallRecordsEvents.REQUEST_RECORDS_SUCCESS,
-  ICallRecord[]
+  IFindRecordsResult
 >(CallRecordsEvents.REQUEST_RECORDS_SUCCESS);
 
 export const requestRecordsFail = makeAction(CallRecordsEvents.REQUEST_RECORDS_FAIL);
@@ -53,6 +53,17 @@ const deleteRecordSuccess = makeAction<
 const deleteRecordFail = makeAction<CallRecordsEvents.DELETE_RECORD_FAIL, number>(
   CallRecordsEvents.DELETE_RECORD_FAIL
 );
+
+const loadMoreRecordsRequest = makeAction(
+  CallRecordsEvents.LOAD_MORE_RECORDS_REQUEST
+);
+
+const loadMoreRecordsSuccess = makeAction<
+  CallRecordsEvents.LOAD_MORE_RECORDS_SUCCESS,
+  IFindRecordsResult
+>(CallRecordsEvents.LOAD_MORE_RECORDS_SUCCESS);
+
+const loadMoreRecordsFail = makeAction(CallRecordsEvents.LOAD_MORE_RECORDS_FAIL);
 
 // async actions
 export interface IFetchRecordsOptions {
@@ -91,6 +102,32 @@ export const fetchRecords = ({
     });
 };
 
+export const loadMoreRecords = () => (
+  dispatch: Dispatch<ICallRecordAction>,
+  getState: () => IAppState
+) => {
+  const {
+    dateInterval,
+    sorting,
+    searchQuery,
+    direction,
+    page,
+  } = getState().callRecords;
+  dispatch(loadMoreRecordsRequest());
+  CallRecordsService.find({
+    dateInterval,
+    sorting,
+    searchQuery,
+    direction,
+    page: page + 1,
+  })
+    .then(res => dispatch(loadMoreRecordsSuccess(res)))
+    .catch(err => {
+      error(err);
+      dispatch(loadMoreRecordsFail());
+    });
+};
+
 export const deleteRecord = (id: number) => (
   dispatch: Dispatch<ICallRecordAction>
 ) => {
@@ -120,6 +157,9 @@ const actions = {
   deleteRecordRequest,
   deleteRecordSuccess,
   deleteRecordFail,
+  loadMoreRecordsRequest,
+  loadMoreRecordsSuccess,
+  loadMoreRecordsFail,
 };
 
 export type ICallRecordAction = IActionUnion<typeof actions>;

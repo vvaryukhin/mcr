@@ -2,13 +2,15 @@
 const express = require('express');
 const cors = require('cors');
 const fakeRecords = require('./generate');
+const jwt = require('jsonwebtoken');
 const swaggerUI = require('swagger-ui-express');
 const swaggerDoc = require('./swagger.json');
-const jwt = require('jsonwebtoken');
 
 const TOKEN_SECRET =
   '5c42f5c67156dce3fc61deda797c467d813aefeab0ac5e5bc888' +
   'a201b2abc1d63b94ad99631a293780f6c666d69125c2b1976dd7c76e9810b2c7d7c1ce95bed7';
+
+const RECORDS_PER_PAGE = 20;
 
 let records = fakeRecords().records;
 
@@ -48,8 +50,9 @@ app.post('/api/v1/login/sms/verify', (req, res) => {
 });
 
 app.get('/api/v1/records', verifyAuth, (req, res) => {
-  const { from, to, sorting, q, direction } = req.query;
-  console.log({ from, to, sorting, q, direction });
+  const { from, to, sorting, q, direction, limit, page: _page } = req.query;
+  const page = parseInt(_page, 10) || 1;
+  console.log({ from, to, sorting, q, direction, limit, page });
   let result = records;
   if (direction && direction !== 'ALL') {
     result = result.filter(({ direction: d }) => d === direction);
@@ -68,7 +71,13 @@ app.get('/api/v1/records', verifyAuth, (req, res) => {
       }
     );
   }
-  res.json(result);
+  const l = result.length;
+  const hasMoreRecords = l / RECORDS_PER_PAGE > page;
+  result = result.slice((page - 1) * RECORDS_PER_PAGE, page * RECORDS_PER_PAGE);
+  res.json({
+    records: result,
+    hasMoreRecords,
+  });
 });
 
 app.get('/api/v1/records/:id', verifyAuth, (req, res) => {
@@ -104,4 +113,8 @@ function verifyAuth(req, res, next) {
 
 function generateAccessToken(user) {
   return jwt.sign(user, TOKEN_SECRET, { expiresIn: '24h' });
+}
+
+function getURL(req) {
+  return req.protocol + '://' + req.get('host');
 }

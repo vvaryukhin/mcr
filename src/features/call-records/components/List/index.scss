@@ -53,23 +53,3 @@
   max-height: 100%;
   color: $color-blue-darkest;
 }
-
-.records-list__modal {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  padding: 5px;
-}
-
-.records-list__modal-button {
-  padding: 15px 0;
-  border-bottom: 1px solid $color-gray-light;
-
-  &:last-of-type {
-    border: none;
-  }
-
-  &--delete {
-    color: $color-red;
-  }
-}

@@ -20,7 +20,7 @@ function makeGetDate() {
 const getDate = makeGetDate();
 
 module.exports = () => ({
-  records: Array(10)
+  records: Array(100)
     .fill()
     .map(() => ({
       id: uid(),
