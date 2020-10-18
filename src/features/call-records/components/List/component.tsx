@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import Loader from 'components/Loader';
 import Button from 'components/Button';
+import Highlight from 'components/Highlight';
 import RecordInfo from '../RecordInfo';
-import { classNames, secondsToHHMMSS } from 'utils';
-import { ICallRecord } from 'features/call-records/types';
+import { classNames, id, isNumber, secondsToHHMMSS } from 'utils';
+import { ICallRecord, ITranscription } from 'features/call-records/types';
 import { IFetchRecordsOptions } from 'features/call-records/store';
 
 import { ReactComponent as MenuIcon } from 'assets/images/menu.svg';
@@ -99,6 +100,7 @@ const CallRecordsListItem = ({
   setOpenedMenu,
   setPlayingRecord,
 }: ICallRecordsListItemProps) => {
+  const searchMatch = getTextMatch(call.record.transcriptions, searchQuery);
   return (
     <li
       onClick={e =>
@@ -116,101 +118,96 @@ const CallRecordsListItem = ({
         'records-list__item--loading': call.isDeleting,
         'records-list__item--error': call.isFailed,
       })}`}
-      style={{ flexWrap: 'wrap' }}
       data-test-id="call-records-list/item"
     >
-      <RecordInfo
-        record={call}
-        hasDuration={false}
-        theme={call.isFailed ? 'error' : 'default'}
-      />
-      <div style={{ display: 'flex' }}>
-        {active ? (
-          <div style={{ marginRight: '15px' }} className="records-list__item-menu">
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <RecordInfo
+          record={call}
+          hasDuration={false}
+          theme={call.isFailed ? 'error' : 'default'}
+          searchQuery={searchQuery}
+        />
+        <div style={{ display: 'flex' }}>
+          {active ? (
+            <div style={{ marginRight: '15px' }} className="records-list__item-menu">
+              <button
+                onClick={e => {
+                  e.stopPropagation();
+                  setOpenedMenu(call);
+                }}
+                className="records-list__item-menu-button records-list__item-menu-button--sound-waves"
+                type="button"
+              >
+                <SoundWavesIcon className="records-list__item-menu-icon" />
+              </button>
+            </div>
+          ) : (
+            <span style={{ fontSize: 12, marginRight: 15 }}>
+              {secondsToHHMMSS(call.record.duration)}
+            </span>
+          )}
+          <div className="records-list__item-menu">
             <button
               onClick={e => {
                 e.stopPropagation();
                 setOpenedMenu(call);
               }}
-              className="records-list__item-menu-button records-list__item-menu-button--sound-waves"
+              className="records-list__item-menu-button"
               type="button"
             >
-              <SoundWavesIcon className="records-list__item-menu-icon" />
+              <MenuIcon className="records-list__item-menu-icon" />
             </button>
           </div>
-        ) : (
-          <span style={{ fontSize: 12, marginRight: 15 }}>
-            {secondsToHHMMSS(call.record.duration)}
-          </span>
-        )}
-        <div className="records-list__item-menu">
-          <button
-            onClick={e => {
-              e.stopPropagation();
-              setOpenedMenu(call);
-            }}
-            className="records-list__item-menu-button"
-            type="button"
-          >
-            <MenuIcon className="records-list__item-menu-icon" />
-          </button>
         </div>
       </div>
-      <div style={{ width: '100%' }}>
-        {getTextMatch(
-          call.record.transcriptions.map(({ text }) => text).join(' '),
-          searchQuery
-        )}
-      </div>
+      {searchMatch && (
+        <div
+          style={{ display: 'flex', flexDirection: 'column' }}
+          onClick={() => {
+            console.log('go to message');
+          }}
+        >
+          {searchMatch.map(({ id, text, direction }) => (
+            <div
+              style={{
+                background: '#d3e3fb',
+                padding: 8,
+                marginTop: 5,
+                borderRadius: 7,
+                alignSelf: direction === 'INCOMING' ? 'flex-start' : 'flex-end',
+                maxWidth: '80%',
+              }}
+              key={id}
+            >
+              <Highlight text={text} highlight={searchQuery!} />
+            </div>
+          ))}
+        </div>
+      )}
     </li>
   );
 };
 
-interface IHighlightProps {
-  text: string;
-  highlight: string;
-}
-
-const Highlight = ({ text, highlight }: IHighlightProps) => {
-  const lowerCaseHighlight = highlight.toLowerCase();
-  const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
-  return (
-    <span>
-      {parts.map((part, key) =>
-        part.toLowerCase() === lowerCaseHighlight ? (
-          <b key={key}>{part}</b>
-        ) : (
-          <span key={key}>{part}</span>
-        )
-      )}
-    </span>
+function getTextMatch(transcriptions: ITranscription[], match?: string) {
+  if (!match) return null;
+  const lowerCaseMatch = match.toLowerCase();
+  const idx = transcriptions.findIndex(({ text }) =>
+    text.toLowerCase().includes(lowerCaseMatch)
   );
-};
-
-function getTextMatch(text: string, match: string) {
-  if (match.length < 2) return null;
-  const matchIdx = text.indexOf(match);
-  if (matchIdx > -1) {
-    const startIdx = Math.max(0, matchIdx - 10);
-    const endIdx = matchIdx + 10;
-    return Highlight({
-      text:
-        getDots(text, startIdx, true) +
-        text.slice(startIdx, endIdx) +
-        getDots(text, startIdx, false),
-      highlight: match,
-    });
+  if (isNumber(idx)) {
+    return [
+      transcriptions[idx - 1],
+      transcriptions[idx],
+      transcriptions[idx + 1],
+    ].filter(id);
   }
   return null;
-}
-
-function getDots(text: string, idx: number, before = true) {
-  const nearCharIdx = before ? idx - 1 : idx + 1;
-  if (text[nearCharIdx] === ' ') {
-    return '';
-  } else {
-    return '...';
-  }
 }
 
 export default CallRecordsList;
