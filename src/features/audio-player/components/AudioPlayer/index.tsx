@@ -85,15 +85,19 @@ const AudioPlayer = ({ playingRecord, setOpenedMenu }: IAudioPlayerProps) => {
 
   const heightRef = useRef({ initial: 0, max: 0 });
 
-  const [rootEl, rootRef] = useCallbackRef<HTMLDivElement>(el => {
-    if (el) {
-      const initial = el.getBoundingClientRect().height;
-      el.style.height = styles.PLAYER_MAX_HEIGHT;
-      const max = el.getBoundingClientRect().height;
-      el.style.height = '';
-      heightRef.current = { initial, max };
-    }
-  }, []);
+  const [rootEl, rootRef] = useCallbackRef<HTMLDivElement>(
+    el => {
+      if (el) {
+        el.style.height = '';
+        const initial = el.getBoundingClientRect().height;
+        el.style.height = styles.PLAYER_MAX_HEIGHT;
+        const max = el.getBoundingClientRect().height;
+        el.style.height = '';
+        heightRef.current = { initial, max };
+      }
+    },
+    [playingRecord]
+  );
 
   const handlers = useMemo(() => {
     return makeSwipeHandlers({
@@ -251,7 +255,7 @@ const AudioPlayer = ({ playingRecord, setOpenedMenu }: IAudioPlayerProps) => {
   };
 
   return playingRecord ? (
-    <div className="player" style={{ height: heightRef.current.initial }}>
+    <div className="player">
       <div
         className="player__overlay"
         ref={overlayRef}

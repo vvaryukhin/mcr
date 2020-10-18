@@ -50,26 +50,34 @@ app.post('/api/v1/login/sms/verify', (req, res) => {
 });
 
 app.get('/api/v1/records', verifyAuth, (req, res) => {
-  const { from, to, sorting, q, direction, limit, page: _page } = req.query;
+  const { from, to, sorting, q, direction, page: _page } = req.query;
   const page = parseInt(_page, 10) || 1;
-  console.log({ from, to, sorting, q, direction, limit, page });
+  console.log({ from, to, sorting, q, direction, page });
   let result = records;
   if (direction && direction !== 'ALL') {
     result = result.filter(({ direction: d }) => d === direction);
   }
   if (q) {
-    result = result.filter(
-      ({ collocutor: { phone }, record: { transcriptions } }) => {
-        const queryPhoneDigits = q.replace(/\D/g, '');
-        if (
-          queryPhoneDigits &&
-          phone.replace(/\D/g, '').includes(queryPhoneDigits)
-        ) {
-          return true;
-        }
-        return transcriptions.some(({ text }) => text.includes(q));
+    result = result.filter(({ collocutor, record: { transcriptions } }) => {
+      const queryPhoneDigits = q.replace(/\D/g, '');
+      if (
+        queryPhoneDigits &&
+        collocutor.phone.replace(/\D/g, '').includes(queryPhoneDigits)
+      ) {
+        return true;
       }
-    );
+      const { firstName, lastName, middleName } = collocutor;
+      if (
+        [firstName, lastName, middleName]
+          .filter(v => v)
+          .map(v => v.toLowerCase())
+          .join(' ')
+          .includes(q.trim().toLowerCase())
+      ) {
+        return true;
+      }
+      return transcriptions.some(({ text }) => text.includes(q));
+    });
   }
   const l = result.length;
   const hasMoreRecords = l / RECORDS_PER_PAGE > page;

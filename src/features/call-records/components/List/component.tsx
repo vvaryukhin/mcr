@@ -101,15 +101,18 @@ const CallRecordsListItem = ({
   setPlayingRecord,
 }: ICallRecordsListItemProps) => {
   const searchMatch = getTextMatch(call.record.transcriptions, searchQuery);
+
+  const onItemClick = (e: React.MouseEvent) => {
+    if (call.isDeleting) {
+      e.currentTarget.classList.add('records-list__item--error-shake');
+    } else if (!call.isDeleting) {
+      setPlayingRecord(call);
+    }
+  };
+
   return (
     <li
-      onClick={e =>
-        call.isDeleting
-          ? e.currentTarget.classList.add('records-list__item--error-shake')
-          : !call.isDeleting
-          ? setPlayingRecord(call)
-          : undefined
-      }
+      onClick={onItemClick}
       onAnimationEnd={e =>
         e.currentTarget.classList.remove('records-list__item--error-shake')
       }
@@ -168,7 +171,7 @@ const CallRecordsListItem = ({
       </div>
       {searchMatch && (
         <div
-          style={{ display: 'flex', flexDirection: 'column' }}
+          style={{ display: 'flex', flexDirection: 'column', marginTop: 5 }}
           onClick={() => {
             console.log('go to message');
           }}
