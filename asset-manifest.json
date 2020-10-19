@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/hocopor/mcr/static/css/main.400b0b3d.chunk.css",
+    "main.js": "/hocopor/mcr/static/js/main.a78026b7.chunk.js",
+    "main.js.map": "/hocopor/mcr/static/js/main.a78026b7.chunk.js.map",
+    "runtime-main.js": "/hocopor/mcr/static/js/runtime-main.99c48a1b.js",
+    "runtime-main.js.map": "/hocopor/mcr/static/js/runtime-main.99c48a1b.js.map",
+    "static/js/2.6f3afad3.chunk.js": "/hocopor/mcr/static/js/2.6f3afad3.chunk.js",
+    "static/js/2.6f3afad3.chunk.js.map": "/hocopor/mcr/static/js/2.6f3afad3.chunk.js.map",
+    "index.html": "/hocopor/mcr/index.html",
+    "precache-manifest.7205305ca5836cac570e86889cef903f.js": "/hocopor/mcr/precache-manifest.7205305ca5836cac570e86889cef903f.js",
+    "service-worker.js": "/hocopor/mcr/service-worker.js",
+    "static/css/main.400b0b3d.chunk.css.map": "/hocopor/mcr/static/css/main.400b0b3d.chunk.css.map",
+    "static/js/2.6f3afad3.chunk.js.LICENSE.txt": "/hocopor/mcr/static/js/2.6f3afad3.chunk.js.LICENSE.txt",
+    "static/media/arrow-down-left.d9dd0b6f.svg": "/hocopor/mcr/static/media/arrow-down-left.d9dd0b6f.svg",
+    "static/media/arrow-up-right.e7b3e785.svg": "/hocopor/mcr/static/media/arrow-up-right.e7b3e785.svg",
+    "static/media/fast-forward.ad00e86c.svg": "/hocopor/mcr/static/media/fast-forward.ad00e86c.svg",
+    "static/media/filters.b0e521d5.svg": "/hocopor/mcr/static/media/filters.b0e521d5.svg",
+    "static/media/menu.4912e518.svg": "/hocopor/mcr/static/media/menu.4912e518.svg",
+    "static/media/minus.1996d6d5.svg": "/hocopor/mcr/static/media/minus.1996d6d5.svg",
+    "static/media/pause.bc712347.svg": "/hocopor/mcr/static/media/pause.bc712347.svg",
+    "static/media/play.52de000d.svg": "/hocopor/mcr/static/media/play.52de000d.svg",
+    "static/media/rewind.5de7ceda.svg": "/hocopor/mcr/static/media/rewind.5de7ceda.svg",
+    "static/media/search.9235abdd.svg": "/hocopor/mcr/static/media/search.9235abdd.svg",
+    "static/media/sound-waves.045c8062.svg": "/hocopor/mcr/static/media/sound-waves.045c8062.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.99c48a1b.js",
+    "static/js/2.6f3afad3.chunk.js",
+    "static/css/main.400b0b3d.chunk.css",
+    "static/js/main.a78026b7.chunk.js"
+  ]
+}
