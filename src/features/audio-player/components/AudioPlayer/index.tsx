@@ -265,10 +265,12 @@ const AudioPlayer = ({ playingRecord, setOpenedMenu }: IAudioPlayerProps) => {
         <div {...handlers} className="player__drag">
           <MinusIcon className="player__drag-icon" />
         </div>
-        <RecordInfo record={playingRecord} theme="light" />
-        <button onClick={() => setOpenedMenu(playingRecord)}>
-          <MenuIcon fill="white" width="16" height="16" />
-        </button>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <RecordInfo record={playingRecord} theme="light" />
+          <button onClick={() => setOpenedMenu(playingRecord)}>
+            <MenuIcon fill="white" width="16" height="16" />
+          </button>
+        </div>
         <audio
           ref={audioRef}
           onLoadedMetadata={onLoadedMetaData}

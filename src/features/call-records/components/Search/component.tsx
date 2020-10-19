@@ -13,7 +13,7 @@ const Search = ({ query, setSearchQuery }: ISearchProps) => {
   const [value, setValue] = useState(query);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div style={{ display: 'flex', alignItems: 'center', marginTop: 20 }}>
       <Input
         value={value}
         onChange={e => {

@@ -8,6 +8,7 @@ import { history } from 'router';
 import PhoneMask from 'components/PhoneMask';
 import Variant from 'components/Variant';
 import { notify } from 'components/Notification';
+import FormField from 'components/FormField';
 
 enum LoginTypes {
   PASSWORD = 'PASSWORD',
@@ -53,19 +54,21 @@ const PasswordLogin = ({ phone, setPhone }: ILoginComponentProps) => {
   };
 
   return (
-    <form style={{ textAlign: 'center' }} onSubmit={onSubmit}>
+    <form style={{ textAlign: 'center', marginTop: '30px' }} onSubmit={onSubmit}>
       <PhoneMask
         value={phone}
         onChange={setPhone}
         placeholder="Phone"
         name="phone"
       />
-      <Input
+      <FormField
         value={password}
         onChange={e => setPassword(e.target.value)}
         placeholder="Password"
         name="password"
         type="password"
+        validations={{ min: 6 }}
+        errorMessage={'min: 6'}
       />
       <Button>Submit</Button>
     </form>
@@ -105,7 +108,7 @@ const SMSLogin = ({ phone, setPhone }: ILoginComponentProps) => {
   };
 
   return (
-    <form onSubmit={onSubmit} style={{ textAlign: 'center' }}>
+    <form onSubmit={onSubmit} style={{ textAlign: 'center', marginTop: '30px' }}>
       {step === SMSLoginSteps.ENTER_NUMBER ? (
         <>
           <PhoneMask

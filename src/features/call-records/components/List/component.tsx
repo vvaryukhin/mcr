@@ -3,7 +3,7 @@ import Loader from 'components/Loader';
 import Button from 'components/Button';
 import Highlight from 'components/Highlight';
 import RecordInfo from '../RecordInfo';
-import { classNames, id, isNumber, secondsToHHMMSS } from 'utils';
+import { classNames, id, secondsToHHMMSS } from 'utils';
 import { ICallRecord, ITranscription } from 'features/call-records/types';
 import { IFetchRecordsOptions } from 'features/call-records/store';
 
@@ -203,7 +203,7 @@ function getTextMatch(transcriptions: ITranscription[], match?: string) {
   const idx = transcriptions.findIndex(({ text }) =>
     text.toLowerCase().includes(lowerCaseMatch)
   );
-  if (isNumber(idx)) {
+  if (idx > -1) {
     return [
       transcriptions[idx - 1],
       transcriptions[idx],

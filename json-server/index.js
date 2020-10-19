@@ -25,7 +25,8 @@ app.post('/api/v1/login/password', (req, res) => {
     !phone ||
     !password ||
     typeof phone !== 'string' ||
-    typeof password !== 'string'
+    typeof password !== 'string' ||
+    password.length < 6
   ) {
     return res.sendStatus(400);
   }
