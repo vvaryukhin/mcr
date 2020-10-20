@@ -1,6 +1,6 @@
 @import 'assets/styles/variables';
 
-$player-max-height: 80%;
+$player-max-height: calc(100% - 40px);
 
 /* stylelint-disable */
 :export {

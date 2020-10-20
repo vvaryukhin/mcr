@@ -25,6 +25,7 @@ const ContextMenu = ({ record, onClose, deleteRecord }: IContextMenuProps) => {
 
   const onDeleteRecord = () => {
     record && deleteRecord(record.id);
+    onClose();
   };
 
   return (

@@ -19,6 +19,7 @@ const Transcription = ({ transcriptions }: ITranscriptionsProps) => {
             'transcription__item--outcoming': direction === CallDirections.OUTCOMING,
           })}`}
           key={'message-' + id}
+          data-message-id={id}
         >
           <div className="transcription__text">{text}</div>
           <div className="transcription__time">

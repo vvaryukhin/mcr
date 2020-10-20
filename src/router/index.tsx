@@ -1,8 +1,8 @@
 import React from 'react';
 import { Router } from 'react-router-dom';
-import { createHashHistory } from 'history';
+import { createBrowserHistory } from 'history';
 
-export const history = createHashHistory();
+export const history = createBrowserHistory();
 
 const BrowserRouter: React.FC = ({ children }) => {
   return <Router history={history}>{children}</Router>;

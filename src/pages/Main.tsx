@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CallRecordsList from 'features/call-records/components/List';
 import CallRecordsSearch from 'features/call-records/components/Search';
 import CallDirectionSelect from 'features/call-records/components/CallDirection';
-import AudioPlayer from 'features/audio-player/components/AudioPlayer';
+import PlayingRecordCard from 'features/audio-player/components/PlayingRecordCard';
 import ContextMenu from 'features/call-records/components/ContextMenu';
 import { ICallRecord } from 'features/call-records/types';
 
@@ -27,7 +27,7 @@ const Main = () => {
         record={openedMenuRecord}
         onClose={() => setOpenedMenuRecord(undefined)}
       />
-      <AudioPlayer setOpenedMenu={setOpenedMenuRecord} />
+      <PlayingRecordCard setOpenedMenu={setOpenedMenuRecord} />
     </div>
   );
 };

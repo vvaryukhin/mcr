@@ -3,14 +3,16 @@ import Loader from 'components/Loader';
 import Button from 'components/Button';
 import Highlight from 'components/Highlight';
 import RecordInfo from '../RecordInfo';
-import { classNames, id, secondsToHHMMSS } from 'utils';
+import { classNames, id, secondsToHHMMSS, toInt } from 'utils';
 import { ICallRecord, ITranscription } from 'features/call-records/types';
 import { IFetchRecordsOptions } from 'features/call-records/store';
+import { setActiveMessage, setFullInfo } from 'features/audio-player/store';
 
 import { ReactComponent as MenuIcon } from 'assets/images/menu.svg';
 import { ReactComponent as SoundWavesIcon } from 'assets/images/sound-waves.svg';
 
 import './index.scss';
+import { useDispatch } from 'react-redux';
 
 interface ICallRecordsListProps extends IFetchRecordsOptions {
   records: ICallRecord[];
@@ -100,6 +102,7 @@ const CallRecordsListItem = ({
   setOpenedMenu,
   setPlayingRecord,
 }: ICallRecordsListItemProps) => {
+  const dispatch = useDispatch();
   const searchMatch = getTextMatch(call.record.transcriptions, searchQuery);
 
   const onItemClick = (e: React.MouseEvent) => {
@@ -107,6 +110,14 @@ const CallRecordsListItem = ({
       e.currentTarget.classList.add('records-list__item--error-shake');
     } else if (!call.isDeleting) {
       setPlayingRecord(call);
+      const messageEl = (e.target as HTMLElement).closest<HTMLElement>(
+        '[data-message-id]'
+      );
+      if (messageEl) {
+        const messageId = toInt(messageEl.dataset.messageId);
+        dispatch(setFullInfo(true));
+        messageId !== -1 && dispatch(setActiveMessage(messageId));
+      }
     }
   };
 
@@ -170,12 +181,7 @@ const CallRecordsListItem = ({
         </div>
       </div>
       {searchMatch && (
-        <div
-          style={{ display: 'flex', flexDirection: 'column', marginTop: 5 }}
-          onClick={() => {
-            console.log('go to message');
-          }}
-        >
+        <div style={{ display: 'flex', flexDirection: 'column', marginTop: 5 }}>
           {searchMatch.map(({ id, text, direction }) => (
             <div
               style={{
@@ -186,6 +192,7 @@ const CallRecordsListItem = ({
                 alignSelf: direction === 'INCOMING' ? 'flex-start' : 'flex-end',
                 maxWidth: '80%',
               }}
+              data-message-id={id}
               key={id}
             >
               <Highlight text={text} highlight={searchQuery!} />

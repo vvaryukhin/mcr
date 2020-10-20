@@ -8,7 +8,7 @@ import {
 import { Dispatch } from 'redux';
 import CallRecordsService, { IFindRecordsResult } from '../services';
 import { history } from 'router';
-import { error /* , request */ } from 'utils';
+import { error } from 'utils';
 import { notify } from 'components/Notification';
 import { IAppState } from 'store';
 
@@ -95,6 +95,7 @@ export const fetchRecords = ({
           title: 'Authorization error',
           message: 'Log in to see your records',
         });
+        sessionStorage.removeItem('token');
         return history.push('/login');
       }
       error(err);
