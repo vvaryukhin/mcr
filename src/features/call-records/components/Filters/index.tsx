@@ -9,6 +9,7 @@ import { IAppState } from 'store';
 import { setDateInterval, setSorting } from 'features/call-records/store';
 
 import { ReactComponent as FiltersIcon } from 'assets/images/filters.svg';
+
 import './index.scss';
 
 interface IFiltersProps {
@@ -60,8 +61,18 @@ const Filters = ({
           <Button style={{ marginTop: '20px' }}>Применить</Button>
         </form>
       </Modal>
-      <button onClick={openModal} type="button">
-        <FiltersIcon className="filter__icon" />
+      <button
+        onClick={openModal}
+        style={{
+          width: 35,
+          height: 35,
+          marginLeft: 10,
+          borderRadius: 7,
+          background: '#f3f4fa',
+          padding: 7,
+        }}
+      >
+        <FiltersIcon style={{ width: '100%', height: '100%' }} />
       </button>
     </>
   );

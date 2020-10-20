@@ -9,7 +9,16 @@ import {
   IRecord,
   ITranscription,
 } from '../types';
-import { hasOwn, isArray, isNumber, isObject, isString, uniq } from 'utils';
+import {
+  hasOwn,
+  isArray,
+  isNumber,
+  isObject,
+  isString,
+  id as identity,
+  uniq,
+  isBoolean,
+} from 'utils';
 import { request } from 'utils';
 
 interface IFindRecordOptions {
@@ -18,6 +27,12 @@ interface IFindRecordOptions {
   searchQuery?: string;
   sorting?: CallRecordsSortingTypes;
   direction?: CallDirectionFilters;
+  page?: number;
+}
+
+export interface IFindRecordsResult {
+  hasMoreRecords: boolean;
+  records: ICallRecord[];
 }
 
 export async function find({
@@ -26,6 +41,7 @@ export async function find({
   sorting,
   searchQuery,
   direction,
+  page,
 }: IFindRecordOptions = {}) {
   await sleep(1500);
   const ifDefined = (v: string | number | undefined, k: string) =>
@@ -38,11 +54,20 @@ export async function find({
     ifDefined(sorting, 'sorting'),
     ifDefined(searchQuery, 'q'),
     ifDefined(direction, 'direction'),
+    ifDefined(page, 'page'),
   ]
-    .filter(v => v)
+    .filter(identity)
     .join('&');
   return request(`/records?${queryParams}`, { headers: authHeader() }).then(
-    callRecordsAdapter
+    (data: unknown): IFindRecordsResult =>
+      isObject(data)
+        ? {
+            records: callRecordsAdapter(data.records),
+            hasMoreRecords: isBoolean(data.hasMoreRecords)
+              ? data.hasMoreRecords
+              : false,
+          }
+        : { hasMoreRecords: false, records: [] }
   );
 }
 

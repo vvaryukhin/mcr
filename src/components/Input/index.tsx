@@ -7,7 +7,12 @@ type SVGIcon = React.FunctionComponent<
   React.SVGProps<SVGSVGElement> & { title?: string }
 >;
 
-export interface IInputProps {
+type DefaultInputProps = React.DetailedHTMLProps<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+>;
+
+export interface IInputProps extends DefaultInputProps {
   value?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   name?: string;
@@ -15,6 +20,7 @@ export interface IInputProps {
   placeholder?: string;
   leftIcon?: SVGIcon;
   rightIcon?: SVGIcon;
+  fullWidth?: boolean;
 }
 
 const Input = ({
@@ -25,6 +31,8 @@ const Input = ({
   placeholder,
   leftIcon,
   rightIcon,
+  fullWidth = false,
+  ...inputProps
 }: IInputProps) => {
   const LeftIcon = leftIcon;
   const RightIcon = rightIcon;
@@ -34,6 +42,7 @@ const Input = ({
       className={`input ${classNames({
         'input--left-icon': !!LeftIcon,
         'input--right-icon': !!RightIcon,
+        'input--full-width': fullWidth,
       })}`}
     >
       {LeftIcon && <LeftIcon className="input__icon input__icon--left" />}
@@ -44,6 +53,7 @@ const Input = ({
         type={type}
         name={name}
         placeholder={placeholder}
+        {...inputProps}
       />
       {RightIcon && <RightIcon className="input__icon input__icon--right" />}
     </div>

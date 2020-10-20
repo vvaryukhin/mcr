@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import Select from 'components/Select';
 import ProgressBar from '../ProgressBar';
 import Transcription from '../Transcriptions';
-import ShortRecordInfo from 'features/call-records/components/ShortRecordInfo';
+import RecordInfo from 'features/call-records/components/RecordInfo';
 import {
   blockScroll,
   isNumber,
@@ -20,6 +20,7 @@ import { useCallbackRef } from 'hooks';
 import makeSwipeHandlers from 'utils/swipe';
 
 import { ReactComponent as PlayIcon } from 'assets/images/play.svg';
+import { ReactComponent as MenuIcon } from 'assets/images/menu.svg';
 import { ReactComponent as MinusIcon } from 'assets/images/minus.svg';
 import { ReactComponent as PauseIcon } from 'assets/images/pause.svg';
 import { ReactComponent as RewindIcon } from 'assets/images/rewind.svg';
@@ -29,6 +30,7 @@ import styles from './index.scss';
 
 interface IAudioPlayerProps {
   playingRecord: ICallRecord | null;
+  setOpenedMenu: (record: ICallRecord | undefined) => void;
 }
 
 const PLAYBACK_SPEEDS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
@@ -71,7 +73,7 @@ function calculateDuration(
   return openingRatio * baseDuration;
 }
 
-export const AudioPlayer = ({ playingRecord }: IAudioPlayerProps) => {
+const AudioPlayer = ({ playingRecord, setOpenedMenu }: IAudioPlayerProps) => {
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -83,15 +85,19 @@ export const AudioPlayer = ({ playingRecord }: IAudioPlayerProps) => {
 
   const heightRef = useRef({ initial: 0, max: 0 });
 
-  const [rootEl, rootRef] = useCallbackRef<HTMLDivElement>(el => {
-    if (el) {
-      const initial = el.getBoundingClientRect().height;
-      el.style.height = styles.PLAYER_MAX_HEIGHT;
-      const max = el.getBoundingClientRect().height;
-      el.style.height = '';
-      heightRef.current = { initial, max };
-    }
-  }, []);
+  const [rootEl, rootRef] = useCallbackRef<HTMLDivElement>(
+    el => {
+      if (el) {
+        el.style.height = '';
+        const initial = el.getBoundingClientRect().height;
+        el.style.height = styles.PLAYER_MAX_HEIGHT;
+        const max = el.getBoundingClientRect().height;
+        el.style.height = '';
+        heightRef.current = { initial, max };
+      }
+    },
+    [playingRecord]
+  );
 
   const handlers = useMemo(() => {
     return makeSwipeHandlers({
@@ -249,7 +255,7 @@ export const AudioPlayer = ({ playingRecord }: IAudioPlayerProps) => {
   };
 
   return playingRecord ? (
-    <div className="player" style={{ height: heightRef.current.initial }}>
+    <div className="player">
       <div
         className="player__overlay"
         ref={overlayRef}
@@ -259,7 +265,12 @@ export const AudioPlayer = ({ playingRecord }: IAudioPlayerProps) => {
         <div {...handlers} className="player__drag">
           <MinusIcon className="player__drag-icon" />
         </div>
-        <ShortRecordInfo record={playingRecord} theme="light" />
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <RecordInfo record={playingRecord} theme="light" />
+          <button onClick={() => setOpenedMenu(playingRecord)}>
+            <MenuIcon fill="white" width="16" height="16" />
+          </button>
+        </div>
         <audio
           ref={audioRef}
           onLoadedMetadata={onLoadedMetaData}

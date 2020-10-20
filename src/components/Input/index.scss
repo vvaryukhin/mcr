@@ -2,7 +2,11 @@
 
 .input {
   position: relative;
-  margin: 20px 0;
+  // margin: 20px 0;
+
+  &--full-width {
+    width: 100%;
+  }
 
   &--left-icon .input__field {
     padding-left: 46px;
@@ -44,6 +48,6 @@
   }
 
   &--right {
-    left: 13px;
+    right: 13px;
   }
 }

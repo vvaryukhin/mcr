@@ -3,7 +3,6 @@ import { Route, Switch } from 'react-router-dom';
 import Main from 'pages/Main';
 import Login from 'pages/Login';
 import ErrorPage from 'pages/Error';
-import AudioPlayer from 'features/audio-player/components/AudioPlayer';
 import Notifications from 'components/Notification';
 import ProtectedRoute from 'router/ProtectedRoute';
 
@@ -29,8 +28,6 @@ function App() {
         />
         <Route path="*" component={ErrorPage} />
       </Switch>
-
-      <AudioPlayer />
       <Notifications />
     </div>
   );

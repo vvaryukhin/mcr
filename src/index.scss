@@ -30,6 +30,10 @@ label {
   -webkit-tap-highlight-color: transparent;
 }
 
+button {
+  overflow-anchor: none;
+}
+
 input,
 textarea,
 select {

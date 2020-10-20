@@ -1,101 +1,84 @@
-import React, { useState } from 'react';
-import { ICallRecord } from 'features/call-records/types';
-import Modal from 'components/Modal';
+import React, { useEffect } from 'react';
 import Loader from 'components/Loader';
-import ShortRecordInfo from '../ShortRecordInfo';
-import { classNames, secondsToHHMMSS } from 'utils';
+import Button from 'components/Button';
+import Highlight from 'components/Highlight';
+import RecordInfo from '../RecordInfo';
+import { classNames, id, secondsToHHMMSS } from 'utils';
+import { ICallRecord, ITranscription } from 'features/call-records/types';
+import { IFetchRecordsOptions } from 'features/call-records/store';
 
 import { ReactComponent as MenuIcon } from 'assets/images/menu.svg';
 import { ReactComponent as SoundWavesIcon } from 'assets/images/sound-waves.svg';
+
 import './index.scss';
 
-export interface ICallRecordsListProps {
-  records?: ICallRecord[];
+interface ICallRecordsListProps extends IFetchRecordsOptions {
+  records: ICallRecord[];
   playingRecord: ICallRecord | null;
-  deleteRecord: (id: number) => void;
   setPlayingRecord: (record: ICallRecord) => void;
-  isFailed: boolean;
-  isLoading: boolean;
+  setOpenedMenu: (record: ICallRecord | undefined) => void;
+  fetchRecords: (options: IFetchRecordsOptions) => void;
+  loadMoreRecords: () => void;
+  hasMoreRecords: boolean;
+  isFetching: boolean;
+  isFetchingFailed: boolean;
+  isLoadingMore: boolean;
+  isLoadingMoreFailed: boolean;
 }
 
 const CallRecordsList = ({
-  records = [],
+  records,
   playingRecord,
-  deleteRecord,
   setPlayingRecord,
-  isLoading,
-  isFailed,
+  setOpenedMenu,
+  fetchRecords,
+  loadMoreRecords,
+  hasMoreRecords,
+  dateInterval,
+  sorting,
+  searchQuery,
+  direction,
+  isFetching,
+  isFetchingFailed,
+  isLoadingMore,
+  isLoadingMoreFailed,
 }: ICallRecordsListProps) => {
-  const [openedMenuRecord, setOpenedMenuRecord] = useState<ICallRecord>();
+  useEffect(() => {
+    fetchRecords({ dateInterval, sorting, searchQuery, direction });
+  }, [fetchRecords, dateInterval, sorting, searchQuery, direction]);
 
   return (
     <ul className="records-list">
-      {isLoading && <Loader />}
-      {isFailed ? (
+      {isFetching && <Loader />}
+      {isFetchingFailed ? (
         <div className="records-list__error" data-test-id="call-records-list/error">
           Error ocurred. Check your internet connection.
         </div>
       ) : (
         <>
-          <Modal
-            isOpened={!!openedMenuRecord}
-            onClose={() => setOpenedMenuRecord(undefined)}
-          >
-            <div className="records-list__modal">
-              {openedMenuRecord && (
-                <>
-                  <button
-                    className="records-list__modal-button"
-                    onClick={e => {
-                      e.stopPropagation();
-                      download(openedMenuRecord.record.file);
-                    }}
-                    data-test-id="call-records-list/item/delete"
-                  >
-                    Download
-                  </button>
-                  <button
-                    className="records-list__modal-button"
-                    onClick={e => {
-                      e.stopPropagation();
-                      downloadData(
-                        JSON.stringify(openedMenuRecord.record.transcriptions),
-                        'application/json'
-                      );
-                    }}
-                    data-test-id="call-records-list/item/delete"
-                  >
-                    Download Only Text
-                  </button>
-                </>
-              )}
-              <button
-                className="records-list__modal-button records-list__modal-button--delete"
-                onClick={e => {
-                  e.stopPropagation();
-                  if (openedMenuRecord) {
-                    deleteRecord(openedMenuRecord.id);
-                    setOpenedMenuRecord(undefined);
-                  }
-                }}
-                data-test-id="call-records-list/item/delete"
-              >
-                Delete
-              </button>
-            </div>
-          </Modal>
           {records.map(call => {
             return (
               <CallRecordsListItem
                 key={call.id}
                 call={call}
+                searchQuery={searchQuery}
                 active={!!playingRecord && playingRecord.id === call.id}
-                setOpenedMenu={setOpenedMenuRecord}
+                setOpenedMenu={setOpenedMenu}
                 setPlayingRecord={setPlayingRecord}
-                deleteRecord={deleteRecord}
               />
             );
           })}
+          {hasMoreRecords && (
+            <div style={{ textAlign: 'center', margin: '15px 0' }}>
+              <Button onClick={() => loadMoreRecords()}>
+                {isLoadingMore
+                  ? 'Loading...'
+                  : isLoadingMoreFailed
+                  ? 'Error...'
+                  : 'Load More'}
+              </Button>
+            </div>
+          )}
         </>
       )}
     </ul>
@@ -105,26 +88,31 @@ const CallRecordsList = ({
 interface ICallRecordsListItemProps {
   call: ICallRecord;
   active: boolean;
-  setOpenedMenu: React.Dispatch<React.SetStateAction<ICallRecord | undefined>>;
+  searchQuery: string;
+  setOpenedMenu: (record: ICallRecord | undefined) => void;
   setPlayingRecord: (record: ICallRecord) => void;
-  deleteRecord: (id: number) => void;
 }
 
 const CallRecordsListItem = ({
   call,
   active,
+  searchQuery,
   setOpenedMenu,
   setPlayingRecord,
 }: ICallRecordsListItemProps) => {
+  const searchMatch = getTextMatch(call.record.transcriptions, searchQuery);
+
+  const onItemClick = (e: React.MouseEvent) => {
+    if (call.isDeleting) {
+      e.currentTarget.classList.add('records-list__item--error-shake');
+    } else if (!call.isDeleting) {
+      setPlayingRecord(call);
+    }
+  };
+
   return (
     <li
-      onClick={e =>
-        call.isFailed
-          ? e.currentTarget.classList.add('records-list__item--error-shake')
-          : !call.isDeleting
-          ? setPlayingRecord(call)
-          : undefined
-      }
+      onClick={onItemClick}
       onAnimationEnd={e =>
         e.currentTarget.classList.remove('records-list__item--error-shake')
       }
@@ -135,63 +123,94 @@ const CallRecordsListItem = ({
       })}`}
       data-test-id="call-records-list/item"
     >
-      <ShortRecordInfo
-        record={call}
-        hasDuration={false}
-        theme={call.isFailed ? 'error' : 'default'}
-      />
-      <div style={{ display: 'flex' }}>
-        {active ? (
-          <div
-            style={{ marginRight: '15px' }}
-            className="records-list__item-menu"
-            data-role="records-list/item-menu"
-          >
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <RecordInfo
+          record={call}
+          hasDuration={false}
+          theme={call.isFailed ? 'error' : 'default'}
+          searchQuery={searchQuery}
+        />
+        <div style={{ display: 'flex' }}>
+          {active ? (
+            <div style={{ marginRight: '15px' }} className="records-list__item-menu">
+              <button
+                onClick={e => {
+                  e.stopPropagation();
+                  setOpenedMenu(call);
+                }}
+                className="records-list__item-menu-button records-list__item-menu-button--sound-waves"
+                type="button"
+              >
+                <SoundWavesIcon className="records-list__item-menu-icon" />
+              </button>
+            </div>
+          ) : (
+            <span style={{ fontSize: 12, marginRight: 15 }}>
+              {secondsToHHMMSS(call.record.duration)}
+            </span>
+          )}
+          <div className="records-list__item-menu">
             <button
               onClick={e => {
                 e.stopPropagation();
                 setOpenedMenu(call);
               }}
-              className="records-list__item-menu-button records-list__item-menu-button--sound-waves"
+              className="records-list__item-menu-button"
               type="button"
             >
-              <SoundWavesIcon className="records-list__item-menu-icon" />
+              <MenuIcon className="records-list__item-menu-icon" />
             </button>
           </div>
-        ) : (
-          <span style={{ fontSize: 12, marginRight: 15 }}>
-            {secondsToHHMMSS(call.record.duration)}
-          </span>
-        )}
-        <div className="records-list__item-menu" data-role="records-list/item-menu">
-          <button
-            onClick={e => {
-              e.stopPropagation();
-              setOpenedMenu(call);
-            }}
-            className="records-list__item-menu-button"
-            type="button"
-          >
-            <MenuIcon className="records-list__item-menu-icon" />
-          </button>
         </div>
       </div>
+      {searchMatch && (
+        <div
+          style={{ display: 'flex', flexDirection: 'column', marginTop: 5 }}
+          onClick={() => {
+            console.log('go to message');
+          }}
+        >
+          {searchMatch.map(({ id, text, direction }) => (
+            <div
+              style={{
+                background: '#d3e3fb',
+                padding: 8,
+                marginTop: 5,
+                borderRadius: 7,
+                alignSelf: direction === 'INCOMING' ? 'flex-start' : 'flex-end',
+                maxWidth: '80%',
+              }}
+              key={id}
+            >
+              <Highlight text={text} highlight={searchQuery!} />
+            </div>
+          ))}
+        </div>
+      )}
     </li>
   );
 };
 
-function download(url: string, fileName?: string) {
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = fileName || 'file';
-  link.click();
-}
-
-function downloadData(data: string, mimeType: string) {
-  const blob = new Blob([data], { type: mimeType });
-  const url = window.URL.createObjectURL(blob);
-  console.log(url);
-  download(url);
+function getTextMatch(transcriptions: ITranscription[], match?: string) {
+  if (!match) return null;
+  const lowerCaseMatch = match.toLowerCase();
+  const idx = transcriptions.findIndex(({ text }) =>
+    text.toLowerCase().includes(lowerCaseMatch)
+  );
+  if (idx > -1) {
+    return [
+      transcriptions[idx - 1],
+      transcriptions[idx],
+      transcriptions[idx + 1],
+    ].filter(id);
+  }
+  return null;
 }
 
 export default CallRecordsList;

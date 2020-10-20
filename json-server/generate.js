@@ -17,18 +17,26 @@ function makeGetDate() {
   };
 }
 
+function generateName() {
+  return Math.random() >= 0.5
+    ? {
+        firstName: faker.name.firstName(),
+        middleName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+      }
+    : {};
+}
+
 const getDate = makeGetDate();
 
 module.exports = () => ({
-  records: Array(10)
+  records: Array(100)
     .fill()
     .map(() => ({
       id: uid(),
       direction: getDirection(),
       collocutor: {
-        firstName: faker.name.firstName(),
-        middleName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        ...generateName(),
         phone: faker.phone.phoneNumber('+7 ### ###-##-##'),
       },
       record: {

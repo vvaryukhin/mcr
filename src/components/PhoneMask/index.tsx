@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Input, { IInputProps } from 'components/Input';
+import { /*  Input,  */ IInputProps } from 'components/Input';
 import { id, isString, makeSet } from 'utils';
+import FormField from 'components/FormField';
 
 interface IPhoneMaskProps extends Omit<IInputProps, 'onChange' | 'type'> {
   onChange?: (phone: string) => void;
@@ -12,7 +13,7 @@ const firstPhoneNumberDigits = makeSet(['+', '7', '8']);
 // area code - 3
 // central office code - 3
 // line/subscription number - 4
-const MAX_DIGITS_IN_NUMBER = 11;
+const DIGITS_IN_NUMBER = 11;
 
 const onlyDigits = (val: string) => val.replace(/\D/g, '');
 
@@ -45,22 +46,24 @@ const PhoneMask = ({ value = '', onChange, ...otherProps }: IPhoneMaskProps) => 
       } else {
         newValue = '+7' + newPhoneDigits;
       }
-    } else if (newPhoneDigits.length > MAX_DIGITS_IN_NUMBER) {
+    } else if (newPhoneDigits.length > DIGITS_IN_NUMBER) {
       shouldUpdate = false;
     } else {
       newValue = newPhoneDigits;
     }
     if (shouldUpdate && isString(newValue)) {
-      newValue = newValue.substr(0, MAX_DIGITS_IN_NUMBER);
+      newValue = newValue.substr(0, DIGITS_IN_NUMBER);
       setDigitsValue(newValue);
       onChange && onChange(newValue);
     }
   };
 
   return (
-    <Input
+    <FormField
       value={formatNumber(digitsValue)}
       onChange={handleChange}
+      validations={{ phone: true }}
+      errorMessage={'min: 11'}
       {...otherProps}
     />
   );

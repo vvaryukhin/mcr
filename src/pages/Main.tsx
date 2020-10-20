@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CallRecordsList from 'features/call-records/components/List';
 import CallRecordsSearch from 'features/call-records/components/Search';
 import CallDirectionSelect from 'features/call-records/components/CallDirection';
-import Filters from 'features/call-records/components/Filters';
+import AudioPlayer from 'features/audio-player/components/AudioPlayer';
+import ContextMenu from 'features/call-records/components/ContextMenu';
+import { ICallRecord } from 'features/call-records/types';
 
 const Main = () => {
+  const [openedMenuRecord, setOpenedMenuRecord] = useState<ICallRecord>();
+
   return (
     <div>
       <div
@@ -15,11 +19,15 @@ const Main = () => {
         }}
       >
         <h2 className="heading">Ваши звонки</h2>
-        <Filters />
       </div>
       <CallDirectionSelect />
       <CallRecordsSearch />
-      <CallRecordsList />
+      <CallRecordsList setOpenedMenu={setOpenedMenuRecord} />
+      <ContextMenu
+        record={openedMenuRecord}
+        onClose={() => setOpenedMenuRecord(undefined)}
+      />
+      <AudioPlayer setOpenedMenu={setOpenedMenuRecord} />
     </div>
   );
 };
