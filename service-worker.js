@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/hocopor/mcr/precache-manifest.7205305ca5836cac570e86889cef903f.js"
+  "/hocopor/mcr/precache-manifest.f92bb179bb14082b6cab144399eaaa4f.js"
 );
 
 self.addEventListener('message', (event) => {
