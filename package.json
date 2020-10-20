@@ -2,7 +2,7 @@
   "name": "mcr",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/hocopor/mcr",
+  "homepage": "https://hocopor.github.io/mcr",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.2",
