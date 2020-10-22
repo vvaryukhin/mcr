@@ -51,7 +51,7 @@ const Transition: React.FC<TransitionProps> = ({
       nextFrame(() => {
         removeClass(el, leaveFromClass);
         addClass(el, leaveToClass);
-        whenTransitionEnds(el, undefined, () => {
+        whenTransitionEnds(el, () => {
           removeClass(el, leaveToClass);
           removeClass(el, leaveActiveClass);
           setLocalVisible(false);
@@ -73,7 +73,7 @@ const Transition: React.FC<TransitionProps> = ({
         nextFrame(() => {
           removeClass(el, isAppear ? appearFromClass : enterFromClass);
           addClass(el, isAppear ? appearToClass : enterToClass);
-          whenTransitionEnds(el, undefined, () => {
+          whenTransitionEnds(el, () => {
             removeClass(el, isAppear ? appearToClass : enterToClass);
             removeClass(el, isAppear ? appearActiveClass : enterActiveClass);
           });
@@ -104,10 +104,10 @@ const Transition: React.FC<TransitionProps> = ({
   return el;
 };
 
-function whenTransitionEnds(
+export function whenTransitionEnds(
   el: Element,
-  expectedType: TransitionProps['type'] | undefined,
-  cb: () => void
+  cb: () => void,
+  expectedType?: TransitionProps['type']
 ) {
   const { type, timeout, propCount } = getTransitionInfo(el, expectedType);
 

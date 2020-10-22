@@ -1,0 +1,84 @@
+@import 'assets/styles/variables';
+
+.player {
+  display: flex;
+  flex-direction: column;
+
+  &--small {
+    flex-direction: row;
+
+    .player__time-progress {
+      flex: 1;
+    }
+
+    .player__controls-time {
+      width: auto;
+      margin: 10px 0 0 10px;
+    }
+
+    .player__toggle-playing-btn {
+      width: 35px;
+      height: 35px;
+    }
+
+    .player__toggle-playing-icon--play {
+      transform: translate(1px, 1px);
+    }
+  }
+}
+
+.player__controls {
+  display: flex;
+  align-items: center;
+}
+
+.player__time-progress {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 10px 0;
+}
+
+.player__controls-time {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.player__update-time {
+  width: 20px;
+  height: 20px;
+
+  &--forward {
+    margin-left: 15px;
+  }
+
+  &--backward {
+    margin-right: 15px;
+  }
+}
+
+.player__update-time-icon {
+  fill: $color-white;
+}
+
+.player__toggle-playing-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid $color-white;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+
+.player__toggle-playing-icon {
+  width: 16px;
+  height: 16px;
+  fill: $color-white;
+
+  &--play {
+    transform: translateX(2px);
+  }
+}

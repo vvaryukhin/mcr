@@ -2,13 +2,19 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import Player from '../Player';
 import Transcription from '../Transcriptions';
 import RecordInfo from 'features/call-records/components/RecordInfo';
-import { isNumber, nextFrame, style, transitionEnd } from 'utils';
+import { isNumber, nextFrame, style } from 'utils';
 import { connect } from 'react-redux';
 import { IAppState } from 'store';
 import { ICallRecord } from 'features/call-records/types';
-import { setFullInfo, setPlayingRecord } from 'features/audio-player/store';
+import {
+  setActiveMessage,
+  setFullInfo,
+  setPlayingRecord,
+} from 'features/audio-player/store';
 import { useCallbackRef } from 'hooks';
+import { whenTransitionEnds } from 'components/Transition';
 import makeSwipeHandlers from 'utils/swipe';
+import getCollocutorName from 'features/audio-player/utils/get-collocutor-name';
 
 import { ReactComponent as MenuIcon } from 'assets/images/menu.svg';
 import { ReactComponent as MinusIcon } from 'assets/images/minus.svg';
@@ -21,6 +27,7 @@ interface IAudioPlayerProps {
   fullInfo: boolean;
   setFullInfo: (value: boolean) => void;
   activeMessageId: number | null;
+  setActiveMessage: (messageId: number | null) => void;
   setPlayingRecord: (value: ICallRecord | null) => void;
 }
 
@@ -38,7 +45,7 @@ function performTransition(
   nextFrame(() => {
     style(el, options.nextFrame);
   });
-  transitionEnd(el, () => {
+  whenTransitionEnds(el, () => {
     style(el, options.end);
   });
 }
@@ -63,6 +70,7 @@ const AudioPlayer = ({
   fullInfo,
   setFullInfo,
   activeMessageId,
+  setActiveMessage,
   setPlayingRecord,
 }: IAudioPlayerProps) => {
   const [showTranscriptions, setShowTranscriptions] = useState(false);
@@ -151,9 +159,9 @@ const AudioPlayer = ({
     function transitionOverlay(el: HTMLElement, opening: boolean, duration: number) {
       const [opacity, pointerEvents] = opening ? ['1', 'auto'] : ['0', ''];
       performTransition(el, {
-        start: { transition: `opacity ${duration}ms ease-in-out`, pointerEvents },
+        start: { transition: `opacity ${duration}ms ease-in-out` },
         nextFrame: { opacity },
-        end: { transition: '' },
+        end: { transition: '', pointerEvents },
       });
     }
 
@@ -169,14 +177,17 @@ const AudioPlayer = ({
         isOpening
       );
       transitionPlayer(el, isOpening, duration);
-      transitionEnd(el, () => {
+      whenTransitionEnds(el, () => {
         setShowTranscriptions(isOpening);
       });
       if (overlayRef.current) {
         transitionOverlay(overlayRef.current, isOpening, duration);
       }
+      if (!fullInfo) {
+        setActiveMessage(null);
+      }
     }
-  }, [fullInfo, rootEl]);
+  }, [fullInfo, rootEl, setActiveMessage]);
 
   useEffect(() => {
     if (showTranscriptions) {
@@ -187,15 +198,19 @@ const AudioPlayer = ({
   }, [rootEl, activeMessageId, showTranscriptions]);
 
   return playingRecord ? (
-    <div className="player" style={{ height: heightRef.current.initial }}>
+    <div className="record-card" style={{ height: heightRef.current.initial }}>
       <div
-        className="player__overlay"
+        className="record-card__overlay"
         ref={overlayRef}
-        onClick={() => setFullInfo(false)}
+        onTouchStart={() => setFullInfo(false)}
       ></div>
-      <div ref={rootRef} className="player__content" data-test-id="audio-player">
-        <div {...handlers} className="player__drag">
-          <MinusIcon className="player__drag-icon" />
+      <div
+        ref={rootRef}
+        className="record-card__content"
+        data-test-id="audio-player"
+      >
+        <div {...handlers} className="record-card__drag">
+          <MinusIcon className="record-card__drag-icon" />
         </div>
         <div
           onClick={() => setPlayingRecord(null)}
@@ -204,13 +219,19 @@ const AudioPlayer = ({
           close
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <RecordInfo record={playingRecord} theme="light" />
+          {showTranscriptions ? (
+            <RecordInfo record={playingRecord} theme="light" />
+          ) : (
+            <h4 className="heading heading--light" style={{ color: 'white' }}>
+              {getCollocutorName(playingRecord) || playingRecord.collocutor.phone}
+            </h4>
+          )}
           <button onClick={() => setOpenedMenu(playingRecord)}>
             <MenuIcon fill="white" width="16" height="16" />
           </button>
         </div>
 
-        <Player playingRecord={playingRecord} />
+        <Player playingRecord={playingRecord} isSmall={!showTranscriptions} />
 
         {showTranscriptions && (
           <Transcription transcriptions={playingRecord.record.transcriptions} />
@@ -231,6 +252,7 @@ const mapStateToProps = (state: IAppState) => {
 const mapDispatchToProps = {
   setFullInfo,
   setPlayingRecord,
+  setActiveMessage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AudioPlayer);

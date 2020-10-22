@@ -13,7 +13,7 @@ export const setFullInfo = makeAction<AudioPlayerEvents.SET_FULL_INFO, boolean>(
 
 export const setActiveMessage = makeAction<
   AudioPlayerEvents.SET_ACTIVE_MESSAGE,
-  number
+  number | null
 >(AudioPlayerEvents.SET_ACTIVE_MESSAGE);
 
 const actions = {

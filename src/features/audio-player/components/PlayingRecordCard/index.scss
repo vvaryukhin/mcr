@@ -8,7 +8,7 @@ $player-max-height: calc(100% - 40px);
 }
 /* stylelint-enable */
 
-.player__overlay {
+.record-card__overlay {
   position: fixed;
   background: rgba(0, 0, 0, 0.5);
   opacity: 0;
@@ -19,7 +19,7 @@ $player-max-height: calc(100% - 40px);
   pointer-events: none;
 }
 
-.player__content {
+.record-card__content {
   border-radius: $bigger-border-radius $bigger-border-radius 0 0;
   position: fixed;
   bottom: 0;
@@ -33,7 +33,7 @@ $player-max-height: calc(100% - 40px);
   overflow-y: auto;
 }
 
-.player__drag {
+.record-card__drag {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,74 +42,8 @@ $player-max-height: calc(100% - 40px);
   touch-action: none;
 }
 
-.player__drag-icon {
+.record-card__drag-icon {
   width: 20px;
   height: 20px;
   fill: $color-white;
-}
-
-.player__volume-updater {
-  position: relative;
-  margin-right: 25px;
-}
-
-.player__audio-controls {
-  display: flex;
-  justify-content: space-between;
-}
-
-.player__time-progress {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-  padding: 10px 0;
-}
-
-.player__controls {
-  display: flex;
-  align-items: center;
-}
-
-.player__controls-time {
-  width: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.player__update-time {
-  width: 20px;
-  height: 20px;
-
-  &--forward {
-    margin-left: 15px;
-  }
-
-  &--backward {
-    margin-right: 15px;
-  }
-}
-
-.player__update-time-icon {
-  fill: $color-white;
-}
-
-.player__toggle-playing-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid $color-white;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-}
-
-.player__toggle-playing-icon {
-  width: 16px;
-  height: 16px;
-  fill: $color-white;
-
-  &--play {
-    transform: translateX(2px);
-  }
 }

@@ -1,13 +1,14 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import PlayerView from './component2';
+import PlayerView from './component';
 import { ICallRecord } from 'features/call-records/types';
 import { toInt, secondsToHHMMSS } from 'utils';
 
 interface IPlayerProps {
   playingRecord: ICallRecord;
+  isSmall: boolean;
 }
 
-const Player = ({ playingRecord }: IPlayerProps) => {
+const Player = ({ playingRecord, isSmall }: IPlayerProps) => {
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -80,23 +81,30 @@ const Player = ({ playingRecord }: IPlayerProps) => {
   };
 
   return (
-    <PlayerView
-      playing={playing}
-      audioRef={audioRef}
-      progressPercent={progressPercent}
-      onLoadedMetaData={onLoadedMetaData}
-      onTimeUpdate={onTimeUpdate}
-      onEnded={() => setPlaying(false)}
-      currentTime={secondsToHHMMSS(currentTime)}
-      duration={secondsToHHMMSS(duration)}
-      playbackSpeed={playbackSpeed}
-      onPlaybackSpeedChange={onPlaybackSpeedChange}
-      play={play}
-      pause={pause}
-      goForward={goForward}
-      goBackward={goBackward}
-      updateCurrentTime={updateCurrentTime}
-    />
+    <>
+      <audio
+        ref={audioRef}
+        onLoadedMetadata={onLoadedMetaData}
+        onTimeUpdate={onTimeUpdate}
+        onEnded={() => setPlaying(false)}
+        style={{ display: 'none' }}
+        data-test-id="audio-player/audio"
+      ></audio>
+      <PlayerView
+        playing={playing}
+        progressPercent={progressPercent}
+        currentTime={secondsToHHMMSS(currentTime)}
+        duration={secondsToHHMMSS(duration)}
+        playbackSpeed={playbackSpeed}
+        onPlaybackSpeedChange={onPlaybackSpeedChange}
+        play={play}
+        pause={pause}
+        goForward={goForward}
+        goBackward={goBackward}
+        updateCurrentTime={updateCurrentTime}
+        isSmall={isSmall}
+      />
+    </>
   );
 };
 
