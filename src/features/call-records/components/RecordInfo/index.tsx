@@ -1,13 +1,14 @@
 import React from 'react';
+import Highlight from 'components/Highlight';
+import getCollocutorName from 'features/audio-player/utils/get-collocutor-name';
 import { CallDirections, ICallRecord } from 'features/call-records/types';
 import { timestampToDateString } from 'features/call-records/utils';
-import { classNames, id, secondsToHHMMSS } from 'utils';
+import { classNames, secondsToHHMMSS } from 'utils';
 
 import { ReactComponent as ArrowUpRight } from 'assets/images/arrow-up-right.svg';
 import { ReactComponent as ArrowDownLeft } from 'assets/images/arrow-down-left.svg';
 
 import './index.scss';
-import Highlight from 'components/Highlight';
 
 interface IRecordInfo {
   record: ICallRecord;
@@ -69,13 +70,5 @@ const RecordInfo = ({
     </div>
   );
 };
-
-function getCollocutorName(record: ICallRecord) {
-  const {
-    collocutor: { firstName, lastName, middleName },
-  } = record;
-  const definedNames = [firstName, lastName, middleName].filter(id);
-  return definedNames.join(' ');
-}
 
 export default RecordInfo;
